@@ -1,0 +1,178 @@
+package fidusWriter.model.document;
+
+import java.util.ArrayList;
+
+import org.json.simple.JSONObject;
+
+public class MetaData {
+	private NodeJson title = null;     // The HTML of the title of the document in NodeJson format 
+    private NodeJson subtitle = null;  // The HTML of the subtitle of the document in NodeJson format
+    private NodeJson authors = null;   // The HTML of the  author list of the document in NodeJson format
+    private NodeJson _abstract = null; // The HTML of the abstract of the document in NodeJson format
+    private NodeJson keywords = null;  // The HTML of the keywords list of the document in NodeJson format
+    //
+    public MetaData(JSONObject metaData) {
+		if(metaData != null){
+			if(metaData.get("title") != null){
+				JSONObject title = ( (JSONObject) metaData.get("title") );
+				this.setTitle(new NodeJson(title));
+			}
+			if(metaData.get("subtitle") != null){
+				JSONObject subtitle = ( (JSONObject) metaData.get("subtitle") );
+				this.setSubtitle(new NodeJson(subtitle));
+			}
+			if(metaData.get("authors") != null){
+				JSONObject authors = ( (JSONObject) metaData.get("authors") );
+				this.setAuthors(new NodeJson(authors));
+			}
+			if(metaData.get("abstract") != null){
+				JSONObject _abstract = ( (JSONObject) metaData.get("abstract") );
+				this.setAbstract(new NodeJson(_abstract));
+			}
+			if(metaData.get("keywords") != null){
+				JSONObject keywords = ( (JSONObject) metaData.get("keywords") );
+				this.setKeywords(new NodeJson(keywords));
+			}
+		}
+	}
+    public MetaData(){
+    	this.setTitle(new NodeJson(NodeType.div,new Attribute("id", "document-title"), null));
+    	this.setSubtitle(new NodeJson(NodeType.div,new Attribute("id", "document-subtitle"), null));
+    	this.setAuthors(new NodeJson(NodeType.div,new Attribute("id", "metadata-authors"), null));
+    	this.setAbstract(new NodeJson(NodeType.div, new Attribute("id", "metadata-abstract"), new NodeJson(new NodeName(NodeType.p),null,null)));
+    	this.setKeywords(new NodeJson(NodeType.div,new Attribute("id", "metadata-keywords"), null));
+    }
+	//
+	public NodeJson getTitle() {
+		return title;
+	}
+	public void setTitle(NodeJson title) {
+		this.title = title;
+	}
+	public void setTitle(String title) {
+		if(this.title != null && (this.title.getC()!=null && this.title.getC().size()==0)){
+			this.title.getC().add(new TextNode(title));
+		}
+	}
+	public NodeJson getSubtitle() {
+		return subtitle;
+	}
+	public void setSubtitle(NodeJson subtitle) {
+		this.subtitle = subtitle;
+	}
+	public void setSubtitle(String subtitle) {
+		if(this.subtitle != null && (this.subtitle.getC()!=null && this.subtitle.getC().size()==0)){
+			this.subtitle.getC().add(new TextNode(subtitle));
+		}
+	}
+	public NodeJson getAuthors() {
+		return authors;
+	}
+	public void setAuthors(NodeJson authors) {
+		this.authors = authors;
+	}
+	public void setAuthors(String authors) {
+		if(this.authors != null && (this.authors.getC()!=null && this.authors.getC().size()==0)){
+			this.authors.getC().add(new TextNode(authors));
+		}
+	}
+	public NodeJson getAbstract() {
+		return _abstract;
+	}
+	public void setAbstract(NodeJson _abstract) {
+		this._abstract = _abstract;
+	}
+	public void setAbstract(String _abstract) {		
+		if(this._abstract != null && (this._abstract.getC()!=null && this._abstract.getC().size()>0)){
+			NodeJson node = (NodeJson) this._abstract.getC().get(0);
+			if(node!=null){
+				if(node.getC() != null)
+					node.getC().add(new TextNode(_abstract));
+				else{
+					node.setC(new ArrayList<Child>());
+					node.getC().add(new TextNode(_abstract));
+				}
+			}
+		}
+	}
+	public NodeJson getKeywords() {
+		return keywords;
+	}
+	public void setKeywords(NodeJson keywords) {
+		this.keywords = keywords;
+	}
+	public void setKeywords(String keywords) {
+		if(this.keywords != null && (this.keywords.getC()!=null && this.keywords.getC().size()==0)){
+			this.keywords.getC().add(new TextNode(keywords));
+		}
+	}
+	//
+	public String toString(){
+		String str="{";
+		boolean flag = false;
+		if(this.getTitle()!=null){
+			if(flag==true)
+				str += ",";
+			flag = true;
+			str+="\"title\":"+this.getTitle().toString();
+		}
+		if(this.getSubtitle()!=null){
+			if(flag==true)
+				str += ",";
+			flag = true;
+			str+="\"subtitle\":"+this.getSubtitle().toString();
+		}
+		if(this.getAuthors()!=null){
+			if(flag==true)
+				str += ",";
+			flag = true;
+			str+="\"authors\":"+this.getAuthors().toString();
+		}
+		if(this.getAbstract()!=null){
+			if(flag==true)
+				str += ",";
+			flag = true;
+			str+="\"abstract\":"+this.getAbstract().toString();
+		}
+		if(this.getKeywords()!=null){
+			if(flag==true)
+				str += ",";
+			flag = true;
+			str+="\"keywords\":"+this.getKeywords().toString();
+		}
+		str+="}";
+		return str;
+	}
+	//
+	public boolean hasTitle() {
+		if(this.title!=null && this.title.getC()!=null && this.title.getC().size()>0)
+			return true;
+		else
+			return false;
+	}
+	public boolean hasSubtitle() {
+		if(this.subtitle!=null && this.subtitle.getC()!=null && this.subtitle.getC().size()>0)
+			return true;
+		else
+			return false;
+	}
+	public boolean hasAuthors() {
+		if(this.authors!=null && this.authors.getC()!=null && this.authors.getC().size()>0)
+			return true;
+		else
+			return false;
+	}
+	public boolean hasAbstract() {
+		if(this._abstract!=null && this._abstract.getC()!=null && this._abstract.getC().size()>0)
+			return true;
+		else
+			return false;
+	}
+	public boolean hasKeywords() {
+		if(this.keywords!=null && this.keywords.getC()!=null && this.keywords.getC().size()>0)
+			return true;
+		else
+			return false;
+	}
+
+}
