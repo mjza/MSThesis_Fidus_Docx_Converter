@@ -91,7 +91,7 @@ public class FileHelper {
 	public static File copyFile(String srcFile, String targetPath, String newName){
 		File source = new File(srcFile);
 		Path src = source.toPath();
-		String destination = newName != null ? (targetPath+"/"+newName) : (targetPath+"/"+source.getName());
+		String destination = newName != null ? (targetPath+getPathSpiliter()+newName) : (targetPath+getPathSpiliter()+source.getName());
 		File target = new File(destination);
 		Path dst = target.toPath();
 		try {
