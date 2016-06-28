@@ -28,13 +28,13 @@ public class Unzipper extends FileHelper{
 			    // check if there is any dot in file name, then add other sections of its name
 			    for(int i=1;i<parts.length-1;i++)
 			    	fileName += '.'+parts[i]; 
-			String targetDirectory = destinationFolder == null ? (filePath+"/"+fileName) : destinationFolder;
+			String targetDirectory = destinationFolder == null ? (filePath+FileHelper.getPathSpiliter()+fileName) : destinationFolder;
 		    String _fileExtension = parts[parts.length-1];
 		    
 		    if(_fileExtension.toLowerCase().compareTo(fileExtension)==0){
 		    	if(makeDirectory(targetDirectory)){			    	
 			    	addresses = unzipDirectory(pathToFile, targetDirectory);
-			    	addresses.add(targetDirectory);
+			    	addresses.add(targetDirectory); // keep it as the last address
 			    }
 		    }
 		}

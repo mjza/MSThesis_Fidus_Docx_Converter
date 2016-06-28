@@ -129,7 +129,7 @@ public class Settings {
 				if(flag==true)
 					str += ",";
 				flag = true;
-				str += "\"citationstyle\": \""+this.getCitationstyle()+"\"";
+				str += "\"citationstyle\": \""+this.getCitationstyle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 			}
 			if(this.isMetadataAbstract()!=null){
 				if(flag==true)
@@ -153,7 +153,7 @@ public class Settings {
 				if(flag==true)
 					str += ",";
 				flag = true;
-				str += "\"documentstyle\": \""+this.getDocumentstyle()+"\"";
+				str += "\"documentstyle\": \""+this.getDocumentstyle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 			}
 			str += "}";
 			return str;

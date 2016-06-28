@@ -45,13 +45,13 @@ public class TeamMember {
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"avatar\":\""+this.getAvatar()+"\"";
+			str+="\"avatar\":\""+this.getAvatar().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getName()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"name\":\""+this.getName()+"\"";
+			str+="\"name\":\""+this.getName().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		str+="}";
 		return str;

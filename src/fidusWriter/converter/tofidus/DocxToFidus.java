@@ -286,13 +286,21 @@ public class DocxToFidus {
 		}
 		
 	}
-	protected void addCitation(String citationTag, String citationPage, String citationText, String citationTextBefore) {
+	protected void addCitation(List<String> citationTags, String citationPages, String citationText, String citationTextBefores) {
 		if( this.bibo != null){
-			BibliographyEntry entry = this.bibo.getBibliographyEntry(citationTag);
-			if(entry!=null){
+			String ids = null;
+			for(int i=0;i<citationTags.size();i++){
+				String citationTag = citationTags.get(i);
+				BibliographyEntry entry = this.bibo.getBibliographyEntry(citationTag);
+				if(ids==null)
+					ids = ""+entry.getId();
+				else
+					ids += ","+entry.getId();
+			}
+			if(ids!=null){
 				if(this.currentNode == null)
 					this.addNewParagraphToDocument(null);
-				this.currentNode.addCitationSpanChild(entry.getId(),citationPage,citationTextBefore);
+				this.currentNode.addCitationSpanChild(ids,citationPages,citationTextBefores);
 			}
 		}		
 	}
@@ -782,9 +790,9 @@ public class DocxToFidus {
 				else
 					return "Subtitle";
 			} else if(destination.equals("Abstract")){
-				if(this.getDoc().getMetaData().hasAbstract())
+				if(this.getDoc().getMetaData().hasAbstract()){
 					return null;
-				else
+				}else
 					return "Abstract";
 			} else if(destination.equals("Authors")){
 				if(this.getDoc().getMetaData().hasAuthors())
@@ -996,9 +1004,9 @@ public class DocxToFidus {
 			private boolean paragraphRemoved = false;
 			private boolean stdContent = false;
 			private boolean citation = false;
-			private String citationTag = null;
-			private String citationPage = null;
-			private String citationTextBefore = "";
+			private List<String> citationTags = new ArrayList<String>();
+			private String citationPages = null;
+			private String citationTextBefores = "";
 			private String category = null;
 			private String pStyleName = null;
 			private boolean pBold = false;
@@ -1039,7 +1047,7 @@ public class DocxToFidus {
 			private void resetVariables() {
 				this.temporaryBranch = null;
 				this.citation = false;
-				this.citationTag = null;
+				this.citationTags.clear();
 				this.resetParagraphVariables();
 				this.rStyleName = null;
 				this.rBold = false;
@@ -1060,9 +1068,9 @@ public class DocxToFidus {
 			}
 			private void resetCitationVariables(){
 				this.citation = false;
-				this.citationTag = null;
+				this.citationTags.clear();
 				this.stdContent = false;
-				this.citationPage = null;
+				this.citationPages = null;
 			}
 			private void resetImageVariables(){
 				this.imagePk = null;
@@ -1109,7 +1117,7 @@ public class DocxToFidus {
 				this.isKeywordsP = false;
 				this.resetHyperlinkVariables();
 				this.resetCitationVariables();
-				this.citationTextBefore = "";
+				this.citationTextBefores = "";
 				this.resetCommentsVariables();
 			}
 			private void resetRunVariables(){
@@ -1234,7 +1242,7 @@ public class DocxToFidus {
 				if(ctBlip.getEmbed() != null){
 					org.docx4j.relationships.Relationship relationship = relationshipsPartMD.getRelationshipByID(ctBlip.getEmbed());
 					this.imageRealPath = relationship.getTarget();
-					File file = _this.addFigureImageNode(this.imagePk, this.imageTitle, _this.getWordFolder()+"/word/"+this.imageRealPath);
+					File file = _this.addFigureImageNode(this.imagePk, this.imageTitle, _this.getWordFolder()+FileHelper.getPathSpiliter()+"word"+FileHelper.getPathSpiliter()+this.imageRealPath);
 					imagesFiles.add(file);
 				}
 			}
@@ -1359,7 +1367,7 @@ public class DocxToFidus {
 					} else if(meta.equals("Subtitle")){
 						this.isSubtitleP = true;
 						return;
-					} else if(meta.equals("Author")){
+					} else if(meta.equals("Authors")){
 						this.isAuthorP = true;
 						return;
 					} else if(meta.equals("Abstract")){
@@ -1423,13 +1431,24 @@ public class DocxToFidus {
 								break;
 						i++;
 						if(i<parts.length)
-						  this.citationTag = parts[i];
-						for(;i<parts.length;i++)
-							if(parts[i].equalsIgnoreCase("\\p"))
-								break;
-						i++;
-						if(i<parts.length)
-							this.citationPage = parts[i];
+						  this.citationTags.add(parts[i]);
+						for(;i<parts.length;i++){
+							if(parts[i].equalsIgnoreCase("\\p")){
+								i++;
+								if(i<parts.length){
+									if(this.citationPages==null)
+										this.citationPages = parts[i];
+									else
+										this.citationPages += ",,,"+parts[i];
+								}
+							}
+							else if(parts[i].equalsIgnoreCase("\\m")){
+								i++;
+								if(i<parts.length)
+									this.citationTags.add(parts[i]);
+							}
+						}
+						
 					} else if(insertText.contains("SEQ ")){
 						int i=0;
 						for(i=0;i<parts.length;i++)
@@ -1486,15 +1505,26 @@ public class DocxToFidus {
 					if(this.isMetadata() && this.getMetadataType()!=null){
 						_this.addMetaData(text, this.getMetadataType());
 					} else if(this.rStyleName!=null && this.rStyleName.contains("TextBeforeCitation")){
-						this.citationTextBefore += text; 
+						if(text.startsWith("["))
+							text = text.substring(1, text.length());
+						if(text.endsWith("]"))
+							text = text.substring(0, text.length()-1);
+						if(this.citationTextBefores.length()==0)
+							this.citationTextBefores = text;
+						else
+							this.citationTextBefores += ",,,"+text;
 					} else if(this.citation && this.stdContent){
-						_this.addCitation(this.citationTag,this.citationPage,text,this.citationTextBefore);
+						_this.addCitation(this.citationTags,this.citationPages,text,this.citationTextBefores);
 						this.resetCitationVariables();
-						this.citationTextBefore = "";
-					} else if(this.citationTextBefore.length()>0 && !this.stdContent && (this.rStyleName==null || !this.rStyleName.contains("TextBeforeCitation"))){
-						this.citationTextBefore += text;
-						_this.addTextToCurrentNode(this.citationTextBefore);
-						this.citationTextBefore = "";
+						this.citationTextBefores = "";
+					} else if(this.citationTextBefores.length()>0 && !this.stdContent && (this.rStyleName==null || !this.rStyleName.contains("TextBeforeCitation"))){
+						if(text.startsWith("["))
+							text = text.substring(1, text.length());
+						if(text.endsWith("]"))
+							text = text.substring(0, text.length()-1);
+						this.citationTextBefores += ",,,"+text;
+						_this.addTextToCurrentNode(this.citationTextBefores);
+						this.citationTextBefores = "";
 					} else if(this.commentedRun){
 						if(this.commentsIds2ndSeen.size()>0){
 							_this.addCommentedText(this.commentedText,this.commentsIds2ndSeen,this.callColseAfterPushingComment);

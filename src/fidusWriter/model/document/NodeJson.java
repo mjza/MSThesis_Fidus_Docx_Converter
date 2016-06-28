@@ -114,7 +114,7 @@ public class NodeJson extends Child {
 		boolean putCamma = false;
 		//
 		if(this.getNn()!=null){
-			str += "\"nn\":\""+this.getNn().getName()+"\"";
+			str += "\"nn\":\""+this.getNn().getName().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 			putCamma = true;
 		}
 		//
@@ -458,7 +458,6 @@ public class NodeJson extends Child {
 	public NodeJson addFormulaSpan(String latex) {
 		NodeJson span = new NodeJson(NodeType.span);
 		this.addChild(span);
-		latex = latex.replace("\\", "\\\\");
 		span.getA().add(new Attribute("class","equation"));
 		span.getA().add(new Attribute("data-equation", latex));
 		span.getA().add(new Attribute("contenteditable", "false"));
@@ -469,7 +468,6 @@ public class NodeJson extends Child {
 		if(figure.nn.getType() != NodeType.figure || figure.getC().size()>1){
 			return null;
 		}else{
-			latex = latex.replace("\\", "\\\\");
 			figure.getA().add(new Attribute("data-equation", latex));
 			NodeJson div = figure.addDivNode();
 			div.getA().add(new Attribute("class", "figure-equation"));
@@ -478,14 +476,14 @@ public class NodeJson extends Child {
 		}
 		
 	}
-	public NodeJson addCitationSpanChild(Long id, String citationPage, String citationTextBefore) {
+	public NodeJson addCitationSpanChild(String ids, String citationPages, String citationTextBefores) {
 		NodeJson span = new NodeJson(NodeType.span);
 		this.addChild(span);
 		span.getA().add(new Attribute("class","citation"));
 		span.getA().add(new Attribute("data-bib-format", "autocite"));
-		span.getA().add(new Attribute("data-bib-entry", ""+id));
-		span.getA().add(new Attribute("data-bib-before", citationTextBefore));
-		span.getA().add(new Attribute("data-bib-page", citationPage));
+		span.getA().add(new Attribute("data-bib-entry", ids));
+		span.getA().add(new Attribute("data-bib-before", citationTextBefores));
+		span.getA().add(new Attribute("data-bib-page", citationPages));
 		return span;
 	}
 	public NodeJson addCommentSpanChild(String commentedText, BigInteger commentId) {

@@ -639,10 +639,17 @@ public class FidusToDocx {
 						}else if (element.hasAttribute("class") && element.getAttributeValue("class").equalsIgnoreCase("citation")) {
 							String idStr = element.getAttributeValue("data-bib-entry");
 							String textBefore = element.getAttributeValue("data-bib-before");
+							String[] textBefores = textBefore.split(",,,");
 							String pageNumber = element.getAttributeValue("data-bib-page");
-							Long id = Long.parseLong(idStr);
-							BibliographyEntry entry = this.bibliography.getBibliographyEntry(id);
-							paragraph = this.createCitation(paragraph, entry, textBefore, pageNumber);
+							String[] pageNumbers = pageNumber.split(",,,");
+							String[] ids = idStr.split(",");
+							List<BibliographyEntry> entries = new ArrayList<BibliographyEntry>();
+							for(int i=0; i<ids.length; i++){
+								Long id = Long.parseLong(ids[i]);
+								BibliographyEntry entry = this.bibliography.getBibliographyEntry(id);
+								entries.add(entry);
+							}
+							paragraph = this.createCitation(paragraph, entries, textBefores, pageNumbers);
 						}
 						else if (element.hasAttribute("data-figure-category")) 
 						{
@@ -756,20 +763,23 @@ public class FidusToDocx {
 		return run;
 	}
 
-	private org.docx4j.wml.P createCitation(org.docx4j.wml.P paragraph, BibliographyEntry entry, String textBefore, String pageNumber) {
-		if(entry==null)
+	private org.docx4j.wml.P createCitation(org.docx4j.wml.P paragraph, List<BibliographyEntry> entries, String[] textBefores, String[] pageNumbers) {
+		if(entries==null || entries.size()==0)
 			return paragraph;
 		//
 		paragraph = this.createAParagraph(paragraph);
 		//
-		org.docx4j.wml.R run = this.createARun(paragraph, null);
-		this.addTextToRun(paragraph, run, textBefore);
-		// Create object for rPr
-	    org.docx4j.wml.RPr rpr = this.createRunProperties(run);
-	    // Create object for rStyle
-	    org.docx4j.wml.RStyle rstyle = this.wmlObjectFactory.createRStyle(); 
-	    rpr.setRStyle(rstyle); 
-	    rstyle.setVal("FWTextBeforeCitationChar");	    
+		for(int i=0; i<textBefores.length;i++)
+		{
+			org.docx4j.wml.R run = this.createARun(paragraph, null);
+			this.addTextToRun(paragraph, run, "["+textBefores[i]+"]");
+			// Create object for rPr
+		    org.docx4j.wml.RPr rpr = this.createRunProperties(run);
+		    // Create object for rStyle
+		    org.docx4j.wml.RStyle rstyle = this.wmlObjectFactory.createRStyle(); 
+		    rpr.setRStyle(rstyle); 
+		    rstyle.setVal("FWTextBeforeCitationChar");
+		}
 		// Create object for sdt (wrapped in JAXBElement)
 		org.docx4j.wml.SdtRun sdtrun = wmlObjectFactory.createSdtRun();
 		JAXBElement<org.docx4j.wml.SdtRun> sdtrunWrapped = wmlObjectFactory.createPSdt(sdtrun);
@@ -799,7 +809,21 @@ public class FidusToDocx {
 		org.docx4j.wml.Text text = wmlObjectFactory.createText();
 		JAXBElement<org.docx4j.wml.Text> textWrapped = wmlObjectFactory.createRInstrText(text);
 		r2.getContent().add(textWrapped);
-		text.setValue("CITATION "+entry.getTag()+" \\p "+pageNumber);
+		String citation = " CITATION ";
+		if(entries.size()>0){
+			BibliographyEntry entry = entries.get(0);
+			citation +=entry.getTag();
+			if(pageNumbers!=null && pageNumbers.length>0)
+				citation +=" \\p "+pageNumbers[0];
+		}
+		for(int i=1;i<entries.size();i++){
+			BibliographyEntry entry = entries.get(i);
+			citation +=" \\m "+entry.getTag();
+			if(pageNumbers!=null && pageNumbers.length>i)
+				citation +=" \\p "+pageNumbers[i];
+		}
+		citation +=" \\l 1033 ";
+		text.setValue(citation);
 		text.setSpace("preserve");
 		// Create object for r
 		org.docx4j.wml.R r3 = wmlObjectFactory.createR();
@@ -817,11 +841,23 @@ public class FidusToDocx {
 		text2.setSpace("preserve");
 		JAXBElement<org.docx4j.wml.Text> textWrapped2 = wmlObjectFactory.createRT(text2);
 		r4.getContent().add(textWrapped2);
-		String title = entry.getAuthorsStr();
-		if(title==null){
-			title = entry.getSubtitle()!=null ? entry.getSubtitle() : entry.getTitle();
+		String citationText = " (";
+		for(int i=0;i<entries.size();i++){
+			if(i>0)
+				citationText += "; ";
+			BibliographyEntry entry = entries.get(i);
+			String title = entry.getAuthorsStr();
+			if(title==null){
+				title = entry.getSubtitle()!=null ? entry.getSubtitle() : entry.getTitle();
+			}
+			citationText += title;
+			if(entry.getYear()!=null)
+				citationText += ", "+entry.getYear();
+			if(pageNumbers !=null && pageNumbers.length>i)
+				citationText += ", p. "+pageNumbers[i];
 		}
-		text2.setValue(" ("+title+", "+entry.getYear()+", p. "+pageNumber+")");
+		citationText += ") ";
+		text2.setValue(citationText);
 		// Create object for rPr
 		// Set background color
 		org.docx4j.wml.RPr rpr2 = wmlObjectFactory.createRPr(); 

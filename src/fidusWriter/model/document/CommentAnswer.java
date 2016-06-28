@@ -99,19 +99,19 @@ public class CommentAnswer {
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"userName\":\""+this.getUserName()+"\"";
+			str+="\"userName\":\""+this.getUserName().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getAnswer()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"answer\":\""+this.getAnswer()+"\"";
+			str+="\"answer\":\""+this.getAnswer().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getUserAvatar()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"userAvatar\":\""+this.getUserAvatar()+"\"";
+			str+="\"userAvatar\":\""+this.getUserAvatar().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getUser()!=null){	
 			if(flag==true)

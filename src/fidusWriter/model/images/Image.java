@@ -145,13 +145,13 @@ public class Image {
     		if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"title\":\""+this.getTitle()+"\"";
+			str+="\"title\":\""+this.getTitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
     	}
     	if(this.getFileType()!=null){
     		if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"file_type\":\""+this.getFileType()+"\"";
+			str+="\"file_type\":\""+this.getFileType().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
     	}
     	if(this.getChecksum()!=null){
     		if(flag==true)
@@ -163,7 +163,7 @@ public class Image {
     		if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"image\":\""+this.getImage()+"\"";
+			str+="\"image\":\""+this.getImage().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
     	}
     	if(this.getHeight()!=null){
     		if(flag==true)
@@ -193,7 +193,7 @@ public class Image {
     		if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"thumbnail\":\""+this.getThumbnail()+"\"";
+			str+="\"thumbnail\":\""+this.getThumbnail().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
     	}
     	str += "}";
     	return str;

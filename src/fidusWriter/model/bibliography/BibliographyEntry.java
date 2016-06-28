@@ -964,73 +964,73 @@ public class BibliographyEntry {
 		boolean flag = false;
 		if(this.getAddendum()!=null){
 			flag = true;
-			str += "\"addendum\":\""+this.getAddendum().replace("\"", "\\\"")+"\"";				
+			str += "\"addendum\":\""+this.getAddendum().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";				
 		}
 		if(this.getAfterword()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"afterword\":\""+this.getAfterword().replace("\"", "\\\"")+"\"";
+			str += "\"afterword\":\""+this.getAfterword().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getAnnotator()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"annotator\":\""+this.getAnnotator().replace("\"", "\\\"")+"\"";
+			str += "\"annotator\":\""+this.getAnnotator().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getAuthor()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"author\":\""+this.getAuthor().replace("\"", "\\\"")+"\"";
+			str += "\"author\":\""+this.getAuthor().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getBookauthor()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"bookauthor\":\""+this.getBookauthor().replace("\"", "\\\"")+"\"";
+			str += "\"bookauthor\":\""+this.getBookauthor().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getBooksubtitle()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"booksubtitle\":\""+this.getBooksubtitle().replace("\"", "\\\"")+"\"";
+			str += "\"booksubtitle\":\""+this.getBooksubtitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getBooktitle()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"booktitle\":\""+this.getBooktitle().replace("\"", "\\\"")+"\"";
+			str += "\"booktitle\":\""+this.getBooktitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getBooktitleaddon()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"booktitleaddon\":\""+this.getBooktitleaddon().replace("\"", "\\\"")+"\"";
+			str += "\"booktitleaddon\":\""+this.getBooktitleaddon().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getChapter()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"chapter\":\""+this.getChapter().replace("\"", "\\\"")+"\"";
+			str += "\"chapter\":\""+this.getChapter().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getCommentator()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"commentator\":\""+this.getCommentator().replace("\"", "\\\"")+"\"";
+			str += "\"commentator\":\""+this.getCommentator().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getDate()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"date\":\""+this.getDate().replace("\"", "\\\"")+"\"";
+			str += "\"date\":\""+this.getDate().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getDoi()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"doi\":\""+this.getDoi().replace("\"", "\\\"")+"\"";
+			str += "\"doi\":\""+this.getDoi().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getEdition()!=null){
 			if(flag==true)
@@ -1039,49 +1039,49 @@ public class BibliographyEntry {
 			if(this.isNumeric(this.getEdition()))
 				str += "\"edition\":"+this.getEdition();
 			else
-				str += "\"edition\":\""+this.getEdition().replace("\"", "\\\"")+"\"";
+				str += "\"edition\":\""+this.getEdition().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getEditor()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"editor\":\""+this.getEditor().replace("\"", "\\\"")+"\"";
+			str += "\"editor\":\""+this.getEditor().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getEditora()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"editora\":\""+this.getEditora().replace("\"", "\\\"")+"\"";
+			str += "\"editora\":\""+this.getEditora().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getEditorb()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"editorb\":\""+this.getEditorb().replace("\"", "\\\"")+"\"";
+			str += "\"editorb\":\""+this.getEditorb().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getEditorc()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"editorc\":\""+this.getEditorc().replace("\"", "\\\"")+"\"";
+			str += "\"editorc\":\""+this.getEditorc().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getEid()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"eid\":\""+this.getEid().replace("\"", "\\\"")+"\"";
+			str += "\"eid\":\""+this.getEid().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getEntryCat()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"entry_cat\":\""+this.getEntryCat().replace("\"", "\\\"")+"\"";
+			str += "\"entry_cat\":\""+this.getEntryCat().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getEntryKey()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"entry_key\":\""+this.getEntryKey().replace("\"", "\\\"")+"\"";
+			str += "\"entry_key\":\""+this.getEntryKey().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getEntryType()!=null){
 			if(flag==true)
@@ -1093,289 +1093,289 @@ public class BibliographyEntry {
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"eprint\":\""+this.getEprint().replace("\"", "\\\"")+"\"";
+			str += "\"eprint\":\""+this.getEprint().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getEprintclass()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"eprintclass\":\""+this.getEprintclass().replace("\"", "\\\"")+"\"";
+			str += "\"eprintclass\":\""+this.getEprintclass().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getEprinttype()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"eprinttype\":\""+this.getEprinttype().replace("\"", "\\\"")+"\"";
+			str += "\"eprinttype\":\""+this.getEprinttype().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getEventdate()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"eventdate\":\""+this.getEventdate().replace("\"", "\\\"")+"\"";
+			str += "\"eventdate\":\""+this.getEventdate().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getEventtitle()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"eventtitle\":\""+this.getEventtitle().replace("\"", "\\\"")+"\"";
+			str += "\"eventtitle\":\""+this.getEventtitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getForeword()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"foreword\":\""+this.getForeword().replace("\"", "\\\"")+"\"";
+			str += "\"foreword\":\""+this.getForeword().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getFile()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"file\":\""+this.getFile().replace("\"", "\\\"")+"\"";
+			str += "\"file\":\""+this.getFile().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getHolder()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"holder\":\""+this.getHolder().replace("\"", "\\\"")+"\"";
+			str += "\"holder\":\""+this.getHolder().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getHowpublished()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"howpublished\":\""+this.getHowpublished().replace("\"", "\\\"")+"\"";
+			str += "\"howpublished\":\""+this.getHowpublished().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getInstitution()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"institution\":\""+this.getInstitution().replace("\"", "\\\"")+"\"";
+			str += "\"institution\":\""+this.getInstitution().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getIntroduction()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"introduction\":\""+this.getIntroduction().replace("\"", "\\\"")+"\"";
+			str += "\"introduction\":\""+this.getIntroduction().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getIsbn()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"isbn\":\""+this.getIsbn().replace("\"", "\\\"")+"\"";
+			str += "\"isbn\":\""+this.getIsbn().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getIsrn()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"isrn\":\""+this.getIsrn().replace("\"", "\\\"")+"\"";
+			str += "\"isrn\":\""+this.getIsrn().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getIssn()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"issn\":\""+this.getIssn().replace("\"", "\\\"")+"\"";
+			str += "\"issn\":\""+this.getIssn().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getIssue()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"issue\":\""+this.getIssue().replace("\"", "\\\"")+"\"";
+			str += "\"issue\":\""+this.getIssue().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getIssuesubtitle()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"issuesubtitle\":\""+this.getIssuesubtitle().replace("\"", "\\\"")+"\"";
+			str += "\"issuesubtitle\":\""+this.getIssuesubtitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getIssuetitle()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"issuetitle\":\""+this.getIssuetitle().replace("\"", "\\\"")+"\"";
+			str += "\"issuetitle\":\""+this.getIssuetitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getJournalsubtitle()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"journalsubtitle\":\""+this.getJournalsubtitle().replace("\"", "\\\"")+"\"";
+			str += "\"journalsubtitle\":\""+this.getJournalsubtitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getShortjournal()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"shortjournal\":\""+this.getShortjournal().replace("\"", "\\\"")+"\"";
+			str += "\"shortjournal\":\""+this.getShortjournal().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getJournaltitle()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"journaltitle\":\""+this.getJournaltitle().replace("\"", "\\\"")+"\"";
+			str += "\"journaltitle\":\""+this.getJournaltitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getLanguage()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"language\":\""+this.getLanguage().replace("\"", "\\\"")+"\"";
+			str += "\"language\":\""+this.getLanguage().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getLocation()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"location\":\""+this.getLocation().replace("\"", "\\\"")+"\"";
+			str += "\"location\":\""+this.getLocation().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getMainsubtitle()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"mainsubtitle\":\""+this.getMainsubtitle().replace("\"", "\\\"")+"\"";
+			str += "\"mainsubtitle\":\""+this.getMainsubtitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getMaintitle()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"maintitle\":\""+this.getMaintitle().replace("\"", "\\\"")+"\"";
+			str += "\"maintitle\":\""+this.getMaintitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getMaintitleaddon()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"maintitleaddon\":\""+this.getMaintitleaddon().replace("\"", "\\\"")+"\"";
+			str += "\"maintitleaddon\":\""+this.getMaintitleaddon().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getNote()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"note\":\""+this.getNote().replace("\"", "\\\"")+"\"";
+			str += "\"note\":\""+this.getNote().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getNumber()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"number\":\""+this.getNumber().replace("\"", "\\\"")+"\"";
+			str += "\"number\":\""+this.getNumber().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getOrganization()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"organization\":\""+this.getOrganization().replace("\"", "\\\"")+"\"";
+			str += "\"organization\":\""+this.getOrganization().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getOriglanguage()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"origlanguage\":\""+this.getOriglanguage().replace("\"", "\\\"")+"\"";
+			str += "\"origlanguage\":\""+this.getOriglanguage().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getPages()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"pages\":\""+this.getPages().replace("\"", "\\\"")+"\"";
+			str += "\"pages\":\""+this.getPages().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getPagetotal()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"pagetotal\":\""+this.getPagetotal().replace("\"", "\\\"")+"\"";
+			str += "\"pagetotal\":\""+this.getPagetotal().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getPart()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"part\":\""+this.getPart().replace("\"", "\\\"")+"\"";
+			str += "\"part\":\""+this.getPart().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getPublisher()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"publisher\":\""+this.getPublisher().replace("\"", "\\\"")+"\"";
+			str += "\"publisher\":\""+this.getPublisher().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getPubstate()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"pubstate\":\""+this.getPubstate().replace("\"", "\\\"")+"\"";
+			str += "\"pubstate\":\""+this.getPubstate().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getSeries()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"series\":\""+this.getSeries().replace("\"", "\\\"")+"\"";
+			str += "\"series\":\""+this.getSeries().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getShortauthor()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"shortauthor\":\""+this.getShortauthor().replace("\"", "\\\"")+"\"";
+			str += "\"shortauthor\":\""+this.getShortauthor().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getSubtitle()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"subtitle\":\""+this.getSubtitle().replace("\"", "\\\"")+"\"";
+			str += "\"subtitle\":\""+this.getSubtitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getTitle()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"title\":\""+this.getTitle().replace("\"", "\\\"")+"\"";
+			str += "\"title\":\""+this.getTitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getShorttitle()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"shorttitle\":\""+this.getShorttitle().replace("\"", "\\\"")+"\"";
+			str += "\"shorttitle\":\""+this.getShorttitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getTitleaddon()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"titleaddon\":\""+this.getTitleaddon().replace("\"", "\\\"")+"\"";
+			str += "\"titleaddon\":\""+this.getTitleaddon().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getTranslator()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"translator\":\""+this.getTranslator().replace("\"", "\\\"")+"\"";
+			str += "\"translator\":\""+this.getTranslator().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getType()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"type\":\""+this.getType().replace("\"", "\\\"")+"\"";
+			str += "\"type\":\""+this.getType().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getUrl()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"url\":\""+this.getUrl().replace("\"", "\\\"")+"\"";
+			str += "\"url\":\""+this.getUrl().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getUrldate()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"urldate\":\""+this.getUrldate().replace("\"", "\\\"")+"\"";
+			str += "\"urldate\":\""+this.getUrldate().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getVenue()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"venue\":\""+this.getVenue().replace("\"", "\\\"")+"\"";
+			str += "\"venue\":\""+this.getVenue().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getVersion()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"version\":\""+this.getVersion().replace("\"", "\\\"")+"\"";
+			str += "\"version\":\""+this.getVersion().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getVolume()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"volume\":\""+this.getVolume().replace("\"", "\\\"")+"\"";
+			str += "\"volume\":\""+this.getVolume().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getVolumes()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str += "\"volumes\":\""+this.getVolumes().replace("\"", "\\\"")+"\"";
+			str += "\"volumes\":\""+this.getVolumes().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(addBrackets)
 			str+="}";

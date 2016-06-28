@@ -90,17 +90,17 @@ public class Fidus {
 		this.setPathToFidusFile(destinationFolder+FileHelper.getPathSpiliter()+destinationFileName);
 		int random = (int )(Math.random() * 50 + 1);
 		this.setFileParentDirectory(destinationFolder);	
-		String temp = destinationFolder+"/temp_"+random;
+		String temp = destinationFolder+FileHelper.getPathSpiliter()+"temp_"+random;
 		while(!FileHelper.makeDirectory(temp)){
 			random = (int )(Math.random() * 50 + 1);
-			temp = destinationFolder+"/temp_"+random;
+			temp = destinationFolder+FileHelper.getPathSpiliter()+"temp_"+random;
 		}
 		this.setTemporaryWorkingFolder(temp);
-		this.setDocument(new Address(temp+"/document.json"));
-		this.setBibliography(new Address(temp+"/bibliography.json"));
-		this.setImages(new Address(temp+"/images.json"));
-		this.setFiletype_version(new Address(temp+"/filetype-version"));
-		this.setMimetype(new Address(temp+"/mimetype"));
+		this.setDocument(new Address(temp+FileHelper.getPathSpiliter()+"document.json"));
+		this.setBibliography(new Address(temp+FileHelper.getPathSpiliter()+"bibliography.json"));
+		this.setImages(new Address(temp+FileHelper.getPathSpiliter()+"images.json"));
+		this.setFiletype_version(new Address(temp+FileHelper.getPathSpiliter()+"filetype-version"));
+		this.setMimetype(new Address(temp+FileHelper.getPathSpiliter()+"mimetype"));
 		this.doc = new Document("");
 		this.bibo = new Bibliography();
 		this.img = new Images();
@@ -113,16 +113,18 @@ public class Fidus {
 		ArrayList<String> addresses = null;
 		addresses = Unzipper.unzipFile(pathToFidus, "fidus", null);
 		if(addresses != null){
+			if(addresses.size()>0)
+				this.setTemporaryWorkingFolder(addresses.get(addresses.size()-1));
 			Address add = new Address(pathToFidus);
 			this.setFileParentDirectory(add.getDirectory());
 		    // create media directory
-			this.setMediaDirectory(this.getFileParentDirectory()+"/media");
+			this.setMediaDirectory(this.getFileParentDirectory()+FileHelper.getPathSpiliter()+"media");
 			FileHelper.makeDirectory(this.getMediaDirectory());
 			// create images directory
-			this.setImagesDirectory(this.getMediaDirectory()+"/images");
+			this.setImagesDirectory(this.getMediaDirectory()+FileHelper.getPathSpiliter()+"images");
 			FileHelper.makeDirectory(this.getImagesDirectory());
 			// create thumbnails directory
-			this.setThumbnailsDirectory(this.getMediaDirectory()+"/image_thumbnails");
+			this.setThumbnailsDirectory(this.getMediaDirectory()+FileHelper.getPathSpiliter()+"image_thumbnails");
 			FileHelper.makeDirectory(this.getThumbnailsDirectory());
 			//
 			this.undefaultFiles = new ArrayList<Address>();
@@ -154,14 +156,14 @@ public class Fidus {
 				  address.toLowerCase().contains("_thumbnail.png")  ||
 				  address.toLowerCase().contains("_thumbnail.bmp")){
 			Files.copy(Paths.get(address), 
-					   Paths.get(this.getThumbnailsDirectory()+"/"+add.getFileFullName()),
+					   Paths.get(this.getThumbnailsDirectory()+FileHelper.getPathSpiliter()+add.getFileFullName()),
 					   StandardCopyOption.REPLACE_EXISTING);
 		} else if(address.toLowerCase().contains(".jpg") || 
 				  address.toLowerCase().contains(".jpeg") ||
 				  address.toLowerCase().contains(".png")  ||
 				  address.toLowerCase().contains(".bmp")){
 			Files.copy(Paths.get(address), 
-					   Paths.get(this.getImagesDirectory()+"/"+add.getFileFullName()),
+					   Paths.get(this.getImagesDirectory()+FileHelper.getPathSpiliter()+add.getFileFullName()),
 					   StandardCopyOption.REPLACE_EXISTING);
 		}
 		else{
@@ -207,7 +209,7 @@ public class Fidus {
 		files.add(new File(this.getImages().getPath()));
 		files.add(new File(this.getBibliography().getPath()));
 		Zipper.zipFiles(files, this.getPathToFidusFile());
-		System.out.println("Look at "+this.getFileParentDirectory()+ " directory.");
+		System.out.println("Look at \""+this.getFileParentDirectory()+ "\" directory.");
 		System.out.println("The file ["+this.getPathToFidusFile()+"] has been created successfully.");
 		System.out.println("Removing temporary folder.");
 		FileHelper.deleteFolder(new File(this.getTemporaryWorkingFolder()));
@@ -324,6 +326,11 @@ public class Fidus {
 	}
 	public void setPathToFidusFile(String pathToFidusFile) {
 		this.pathToFidusFile = pathToFidusFile;
+	}
+	public void deleteTemporaryFolders() {
+		System.out.println("Removing temporary folders.");
+		FileHelper.deleteFolder(new File(this.getTemporaryWorkingFolder()));
+		FileHelper.deleteFolder(new File(this.getMediaDirectory()));
 	}
 	
 }

@@ -72,31 +72,31 @@ public class AccessRight {
 		boolean flag = false;
 		if(this.getUserName()!=null){
 			flag = true;
-			str+="\"user_name\":\""+this.getUserName()+"\"";
+			str+="\"user_name\":\""+this.getUserName().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getUserId()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"user_id\":"+this.getUserId().intValue()+"";
+			str+="\"user_id\":"+this.getUserId().intValue();
 		}
 		if(this.getAvatar()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"avatar\":\""+this.getAvatar()+"\"";
+			str+="\"avatar\":\""+this.getAvatar().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getDocumentId()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"document_id\":"+this.getDocumentId().intValue()+"";
+			str+="\"document_id\":"+this.getDocumentId().intValue();
 		}
 		if(this.getRights()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"rights\":\""+this.getRights().name()+"\"";
+			str+="\"rights\":\""+this.getRights().name().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		str+="}";
 		return str;

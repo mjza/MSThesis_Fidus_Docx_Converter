@@ -558,8 +558,8 @@ public class FidusDocxConvertorWindow extends JPanel {
             		JButton button = (JButton)e.getSource();
             		button.setEnabled(false);
             		System.out.println("Please wait ....");
-            		FidusDocxConvertorWindow.convertFidus2Docx(template, source, destination, button); 
-            		
+            		FidusDocxConvertorWindow.frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            		FidusDocxConvertorWindow.convertFidus2Docx(template, source, destination, FidusDocxConvertorWindow.frame, button); 
             	}
             }          
          });
@@ -655,8 +655,8 @@ public class FidusDocxConvertorWindow extends JPanel {
         frame.setVisible(true);
     }
     
-    private static void convertFidus2Docx(String template, String source, String destination, JButton button){
-    	Fidus2DocxThread myF2DConvertor = new Fidus2DocxThread(template, source, destination, button);
+    private static void convertFidus2Docx(String template, String source, String destination, JFrame frame, JButton button){
+    	Fidus2DocxThread myF2DConvertor = new Fidus2DocxThread(template, source, destination, frame, button);
         Thread t = new Thread(myF2DConvertor);
         t.start();
         myF2DConvertor = null;

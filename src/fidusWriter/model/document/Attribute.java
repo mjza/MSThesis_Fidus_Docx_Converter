@@ -16,7 +16,7 @@ public class Attribute {
 	}
 	public String toString(){
 		String str = "[";
-		str += "\""+this.getName()+"\", \""+this.getValue()+"\"";
+		str += "\""+this.getName()+"\", \""+this.getValue().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		str += "]";
 		return str;
 	}

@@ -135,13 +135,13 @@ public class Comment {
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"userName\":\""+this.getUserName()+"\"";
+			str+="\"userName\":\""+this.getUserName().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getUserAvatar()!=null){
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"userAvatar\":\""+this.getUserAvatar()+"\"";
+			str+="\"userAvatar\":\""+this.getUserAvatar().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getDate()!=null){	
 			if(flag==true)
@@ -153,7 +153,7 @@ public class Comment {
 			if(flag==true)
 				str += ",";
 			flag = true;
-			str+="\"comment\":\""+this.getComment()+"\"";
+			str+="\"comment\":\""+this.getComment().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
 		}
 		if(this.getAnswers()!=null){
 			if(flag==true)

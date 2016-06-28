@@ -163,7 +163,11 @@ public class MetaData {
 			return false;
 	}
 	public boolean hasAbstract() {
-		if(this._abstract!=null && this._abstract.getC()!=null && this._abstract.getC().size()>0)
+		if(this._abstract!=null && this._abstract.getC()!=null && this._abstract.getC().size()>1)
+			return true;
+		else if(this._abstract!=null && this._abstract.getC()!=null && this._abstract.getC().size()>0
+				&& this._abstract.getC().get(0).getType() == ChildrenTypes.element
+				&& ((NodeJson) this._abstract.getC().get(0)).getChildrenNumber()>0)
 			return true;
 		else
 			return false;

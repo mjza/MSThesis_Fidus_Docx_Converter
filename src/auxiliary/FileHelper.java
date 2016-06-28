@@ -9,6 +9,7 @@ import java.nio.file.StandardCopyOption;
 import org.apache.commons.io.FilenameUtils;
 
 public class FileHelper {
+	private static String spiliter = null;
 	protected static boolean checkFileExitance(String path){
 		File f = new File(path);
 		if(f.exists() && !f.isDirectory()) { 
@@ -105,12 +106,16 @@ public class FileHelper {
 		return null;
 	}
 	public static String getPathSpiliter(){
+		if(FileHelper.spiliter!=null)
+			return FileHelper.spiliter;
 		String os = System.getProperty("os.name").toLowerCase();
 		if(os ==null)
-			return "\\";
+			FileHelper.spiliter = "\\";
 		else if (os.contains("win"))
-			return "\\";
+			FileHelper.spiliter = "\\";
 		else
-			return "/";
+			FileHelper.spiliter = "/";
+		//
+		return FileHelper.spiliter;
 	}
 }
