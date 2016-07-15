@@ -40,45 +40,72 @@ import fidusWriter.model.document.NodeType;
 import fidusWriter.model.document.NumberingType;
 import fidusWriter.model.document.TextNode;
 import fidusWriter.model.images.Images;
-import mathEquations.EquationConvertor;
+import mathEquations.EquationConverter;
 
+/**
+ * @author Mahdi, Jaberzadeh Ansari
+ * @role This class contains
+ */
 public class FidusToDocx {
+	/**
+	 * The root path that media directory placed in.
+	 */
 	private String mediaDirectoryPrefixPath = null;
+	/**
+	 * 3 objects that contain different parts of the Fidus file
+	 */
 	private Document doc = null;
 	private Images images = null;
 	private Bibliography bibliography = null;
+	/**
+	 * Following objects that contain different part of the Docx file
+	 */
 	private org.docx4j.openpackaging.packages.WordprocessingMLPackage wordMLPackage = null;
 	private org.docx4j.openpackaging.parts.WordprocessingML.MainDocumentPart mdp = null;
 	private org.docx4j.openpackaging.parts.WordprocessingML.FootnotesPart fnp = null;
-	private boolean addHyperlinksToFNP = false;
 	private org.docx4j.wml.Comments comments = null;
 	private org.docx4j.wml.ObjectFactory wmlObjectFactory = null;
 	private org.docx4j.math.ObjectFactory mathObjectFactory = null;
 	private org.docx4j.bibliography.ObjectFactory biblioObjectFactory = null;
 	private org.docx4j.wml.Numbering numbering;
+	/**
+	 * A refrence to the converter object for math equations
+	 */
+	private EquationConverter equationConverter = null;
+	/**
+	 * A variable for adjusting the amount of indent in each indention
+	 */
 	private final static long indentStep = 360;
-	private EquationConvertor equationConvertor = null;
-	//
+	/**
+	 * if true then the hyperlink will be added to the footnote and not to a new
+	 * run
+	 */
+	private boolean addHyperlinksToFNP = false;
+	/**
+	 * counters use for making new unique id
+	 */
 	private int equationCaptionCounter = 0;
 	private int photoCaptionCounter = 0;
 	private int tableCaptionCounter = 0;
 	private int figureCaptionCounter = 0;
-	//
 	private int footnoteCounter = 0;
-	//
+	/**
+	 * A prefix that is used for injecting in docx4j
+	 */
 	private final static String sdtPrefixMapping = "xmlns:ns0='http://schemas.openxmlformats.org/package/2006/metadata/core-properties' xmlns:ns1='http://purl.org/dc/elements/1.1/'";
-
-	public Bibliography getBibliography() {
-		return this.bibliography;
+	/**
+	 * Getters and Setters area
+	 */
+	public String getMediaDirectoryPrefixPath() {
+		return mediaDirectoryPrefixPath;
 	}
 
-	public void setBibliography(Bibliography bibliography) {
-		this.bibliography = bibliography;
+	public void setMediaDirectoryPrefixPath(String mediaDirectoryPrefixPath) {
+		this.mediaDirectoryPrefixPath = mediaDirectoryPrefixPath;
 	}
 
-	//
 	public Document getDoc() {
-		return this.doc;
+		return doc;
 	}
 
 	public void setDoc(Document doc) {
@@ -86,11 +113,19 @@ public class FidusToDocx {
 	}
 
 	public Images getImages() {
-		return this.images;
+		return images;
 	}
 
 	public void setImages(Images images) {
 		this.images = images;
+	}
+
+	public Bibliography getBibliography() {
+		return bibliography;
+	}
+
+	public void setBibliography(Bibliography bibliography) {
+		this.bibliography = bibliography;
 	}
 
 	public org.docx4j.openpackaging.packages.WordprocessingMLPackage getWordMLPackage() {
@@ -109,12 +144,44 @@ public class FidusToDocx {
 		this.mdp = mdp;
 	}
 
+	public org.docx4j.openpackaging.parts.WordprocessingML.FootnotesPart getFnp() {
+		return fnp;
+	}
+
+	public void setFnp(org.docx4j.openpackaging.parts.WordprocessingML.FootnotesPart fnp) {
+		this.fnp = fnp;
+	}
+
+	public org.docx4j.wml.Comments getComments() {
+		return comments;
+	}
+
+	public void setComments(org.docx4j.wml.Comments comments) {
+		this.comments = comments;
+	}
+
 	public org.docx4j.wml.ObjectFactory getWmlObjectFactory() {
-		return this.wmlObjectFactory;
+		return wmlObjectFactory;
 	}
 
 	public void setWmlObjectFactory(org.docx4j.wml.ObjectFactory wmlObjectFactory) {
 		this.wmlObjectFactory = wmlObjectFactory;
+	}
+
+	public org.docx4j.math.ObjectFactory getMathObjectFactory() {
+		return mathObjectFactory;
+	}
+
+	public void setMathObjectFactory(org.docx4j.math.ObjectFactory mathObjectFactory) {
+		this.mathObjectFactory = mathObjectFactory;
+	}
+
+	public org.docx4j.bibliography.ObjectFactory getBiblioObjectFactory() {
+		return biblioObjectFactory;
+	}
+
+	public void setBiblioObjectFactory(org.docx4j.bibliography.ObjectFactory biblioObjectFactory) {
+		this.biblioObjectFactory = biblioObjectFactory;
 	}
 
 	public org.docx4j.wml.Numbering getNumbering() {
@@ -125,35 +192,112 @@ public class FidusToDocx {
 		this.numbering = numbering;
 	}
 
-	public String getMediaDirectoryPrefixPath() {
-		return mediaDirectoryPrefixPath;
+	public EquationConverter getEquationConverter() {
+		return equationConverter;
 	}
 
-	public void setMediaDirectoryPrefixPath(String mediaDirectoryPrefixPath) {
-		this.mediaDirectoryPrefixPath = mediaDirectoryPrefixPath;
+	public void setEquationConverter(EquationConverter equationConverter) {
+		this.equationConverter = equationConverter;
 	}
 
+	public boolean isAddHyperlinksToFNP() {
+		return addHyperlinksToFNP;
+	}
+
+	public void setAddHyperlinksToFNP(boolean addHyperlinksToFNP) {
+		this.addHyperlinksToFNP = addHyperlinksToFNP;
+	}
+
+	public int getEquationCaptionCounter() {
+		return equationCaptionCounter;
+	}
+
+	public void setEquationCaptionCounter(int equationCaptionCounter) {
+		this.equationCaptionCounter = equationCaptionCounter;
+	}
+
+	public int getPhotoCaptionCounter() {
+		return photoCaptionCounter;
+	}
+
+	public void setPhotoCaptionCounter(int photoCaptionCounter) {
+		this.photoCaptionCounter = photoCaptionCounter;
+	}
+
+	public int getTableCaptionCounter() {
+		return tableCaptionCounter;
+	}
+
+	public void setTableCaptionCounter(int tableCaptionCounter) {
+		this.tableCaptionCounter = tableCaptionCounter;
+	}
+
+	public int getFigureCaptionCounter() {
+		return figureCaptionCounter;
+	}
+
+	public void setFigureCaptionCounter(int figureCaptionCounter) {
+		this.figureCaptionCounter = figureCaptionCounter;
+	}
+
+	public int getFootnoteCounter() {
+		return footnoteCounter;
+	}
+
+	public void setFootnoteCounter(int footnoteCounter) {
+		this.footnoteCounter = footnoteCounter;
+	}
+
+	public static String getSdtprefixmapping() {
+		return sdtPrefixMapping;
+	}
+	// End of Getters and setter area
+	/**
+	 * @return the constant value for indention
+	 */
 	public static long getIndentstep() {
 		return indentStep;
 	}
 
-	//
+	/**
+	 * A constructor by receiving 3 main parts of the Fidus file. And the media
+	 * directory path
+	 * 
+	 * @param doc
+	 *            : the doc object that contains document.json
+	 * @param images
+	 *            : the images object that contains images.json
+	 * @param bibliography
+	 *            : the bibliography object that contains bibliography.json
+	 * @param mediaDirectoryPrefixPath
+	 *            : this prefix will be added to the images address to create
+	 *            their actual address
+	 */
 	public FidusToDocx(Document doc, Images images, Bibliography bibliography, String mediaDirectoryPrefixPath) {
 		super();
-		this.setDoc(doc);
-		this.setImages(images);
-		this.setBibliography(bibliography);
-		this.setMediaDirectoryPrefixPath(mediaDirectoryPrefixPath);
+		this.doc = doc;
+		this.images = images;
+		this.bibliography = bibliography;
+		this.mediaDirectoryPrefixPath = mediaDirectoryPrefixPath;
 		this.wmlObjectFactory = org.docx4j.jaxb.Context.getWmlObjectFactory();
 		this.mathObjectFactory = new org.docx4j.math.ObjectFactory();
-		this.equationConvertor = new EquationConvertor();
+		this.equationConverter = new EquationConverter();
 		this.biblioObjectFactory = new org.docx4j.bibliography.ObjectFactory();
 	}
 
+	/**
+	 * calling this function caused the conversion to be started
+	 * 
+	 * @param storePath
+	 *            : path to the desired store file
+	 * @param templatePath
+	 *            : path to the template file that contains styles
+	 * @return
+	 */
 	public boolean startConvert(String storePath, String templatePath) {
 		System.out.println("Converting to docx is in progress.");
-		NodeJson contents = this.getDoc().getContents();
-		MetaData metaData = this.getDoc().getMetaData();
+		NodeJson contents = this.doc.getContents();
+		MetaData metaData = this.doc.getMetaData();
 		if ("DIV".equalsIgnoreCase(contents.getNodeName())
 				&& "document-contents".equalsIgnoreCase(contents.getAttributeValue("id"))) {
 			File docxFile = null;
@@ -168,7 +312,8 @@ public class FidusToDocx {
 				else
 					this.wordMLPackage = org.docx4j.openpackaging.packages.WordprocessingMLPackage.createPackage();
 				this.mdp = this.wordMLPackage.getMainDocumentPart();
-				this.mdp.getContent().clear(); // clean the text inside of the docx
+				this.mdp.getContent().clear(); // clean the text inside of the
+												// docx
 				try {
 					this.createFootnotePart();
 				} catch (JAXBException e) {
@@ -204,8 +349,8 @@ public class FidusToDocx {
 						coverPagePros = docPropsCoverPagePart.getContents();
 					} else if (pair.getValue().getClass().getName()
 							.equalsIgnoreCase("org.docx4j.openpackaging.parts.WordprocessingML.BibliographyPart")) {
-						org.docx4j.openpackaging.parts.WordprocessingML.BibliographyPart bibliographyPart = 
-								(org.docx4j.openpackaging.parts.WordprocessingML.BibliographyPart) pair.getValue();
+						org.docx4j.openpackaging.parts.WordprocessingML.BibliographyPart bibliographyPart = (org.docx4j.openpackaging.parts.WordprocessingML.BibliographyPart) pair
+								.getValue();
 						JAXBElement<org.docx4j.bibliography.CTSources> bibliography = bibliographyPart.getContents();
 						bibliographyResources = bibliography.getValue().getSource();
 						bibliographyResources.clear();
@@ -216,7 +361,7 @@ public class FidusToDocx {
 				//
 				this.mdp.getContent().add(this.addSdtBlock(metaData, coreProps, coverPagePros));
 				// clean its numbering content
-				this.setNumbering(mdp.getNumberingDefinitionsPart().getContents());
+				this.numbering = mdp.getNumberingDefinitionsPart().getContents();
 				this.numbering.getAbstractNum().clear();
 				this.numbering.getNum().clear();
 				this.numbering.getNumPicBullet().clear();
@@ -242,99 +387,127 @@ public class FidusToDocx {
 		}
 		return false;
 	}
+
+	/**
+	 * Creates a footnote.xml in docx file if not exist or stores it in this.fnp
+	 * 
+	 * @throws JAXBException
+	 * @throws Docx4JException
+	 */
 	private void createFootnotePart() throws JAXBException, Docx4JException {
 		// Setup FootnotesPart if necessary,
 		// along with DocumentSettings
 		this.fnp = this.mdp.getFootnotesPart();
-		if (this.fnp==null) { // that'll be the case in this example
+		if (this.fnp == null) { // that'll be the case in this example
 			// initialise it
 			this.fnp = new org.docx4j.openpackaging.parts.WordprocessingML.FootnotesPart();
 			this.mdp.addTargetPart(this.fnp);
 			org.docx4j.wml.CTFootnotes footnotes = this.createFootnotes();
 			this.fnp.setJaxbElement(footnotes);
-			
+
 			// Usually the settings part contains footnote properties;
 			// so add these if not present
-			org.docx4j.openpackaging.parts.WordprocessingML.DocumentSettingsPart dsp = this.mdp.getDocumentSettingsPart();
-			if (dsp==null) {
+			org.docx4j.openpackaging.parts.WordprocessingML.DocumentSettingsPart dsp = this.mdp
+					.getDocumentSettingsPart();
+			if (dsp == null) {
 				// create it
 				dsp = new org.docx4j.openpackaging.parts.WordprocessingML.DocumentSettingsPart();
 				this.mdp.addTargetPart(dsp);
-			} 
+			}
 			org.docx4j.wml.CTSettings settings = dsp.getContents();
-			if (settings ==null) {
-				settings = this.wmlObjectFactory.createCTSettings(); 
-				dsp.setJaxbElement(settings);				
+			if (settings == null) {
+				settings = this.wmlObjectFactory.createCTSettings();
+				dsp.setJaxbElement(settings);
 			}
 			org.docx4j.wml.CTFtnDocProps ftndocprops = settings.getFootnotePr();
-			if (ftndocprops==null ) {
+			if (ftndocprops == null) {
 				settings.setFootnotePr(this.createSettingsFootnote());
 			}
 		}
 	}
+
+	/**
+	 * Creates the setting section of footnotes in setting.xml of docx
+	 * 
+	 * @return : the setting section of docx
+	 */
 	private org.docx4j.wml.CTFtnDocProps createSettingsFootnote() {
-		org.docx4j.wml.CTFtnDocProps ftndocprops = this.wmlObjectFactory.createCTFtnDocProps(); 
+		org.docx4j.wml.CTFtnDocProps ftndocprops = this.wmlObjectFactory.createCTFtnDocProps();
 		// Create object for footnote
-		org.docx4j.wml.CTFtnEdnSepRef ftnednsepref = this.wmlObjectFactory.createCTFtnEdnSepRef(); 
-		ftndocprops.getFootnote().add( ftnednsepref); 
-		ftnednsepref.setId( BigInteger.valueOf( -1) ); 
+		org.docx4j.wml.CTFtnEdnSepRef ftnednsepref = this.wmlObjectFactory.createCTFtnEdnSepRef();
+		ftndocprops.getFootnote().add(ftnednsepref);
+		ftnednsepref.setId(BigInteger.valueOf(-1));
 		// Create object for footnote
-		org.docx4j.wml.CTFtnEdnSepRef ftnednsepref2 = this.wmlObjectFactory.createCTFtnEdnSepRef(); 
-		ftndocprops.getFootnote().add( ftnednsepref2); 
-		ftnednsepref2.setId( BigInteger.valueOf( 0) ); 
+		org.docx4j.wml.CTFtnEdnSepRef ftnednsepref2 = this.wmlObjectFactory.createCTFtnEdnSepRef();
+		ftndocprops.getFootnote().add(ftnednsepref2);
+		ftnednsepref2.setId(BigInteger.valueOf(0));
 		return ftndocprops;
 	}
+
+	/**
+	 * Creates an empty footnote element to be filled
+	 * 
+	 * @return : the created footnote
+	 */
 	private org.docx4j.wml.CTFootnotes createFootnotes() {
-		org.docx4j.wml.CTFootnotes footnotes = this.wmlObjectFactory.createCTFootnotes(); 
+		org.docx4j.wml.CTFootnotes footnotes = this.wmlObjectFactory.createCTFootnotes();
 		// Create object for footnote
-		org.docx4j.wml.CTFtnEdn ftnedn = this.wmlObjectFactory.createCTFtnEdn(); 
-		footnotes.getFootnote().add( ftnedn); 
-		ftnedn.setId( BigInteger.valueOf( -1) ); 
+		org.docx4j.wml.CTFtnEdn ftnedn = this.wmlObjectFactory.createCTFtnEdn();
+		footnotes.getFootnote().add(ftnedn);
+		ftnedn.setId(BigInteger.valueOf(-1));
 		ftnedn.setType(org.docx4j.wml.STFtnEdn.SEPARATOR);
 		// Create object for p
-		org.docx4j.wml.P p = this.wmlObjectFactory.createP(); 
-		ftnedn.getContent().add( p); 
+		org.docx4j.wml.P p = this.wmlObjectFactory.createP();
+		ftnedn.getContent().add(p);
 		// Create object for pPr
-		org.docx4j.wml.PPr ppr = this.wmlObjectFactory.createPPr(); 
-		p.setPPr(ppr); 
+		org.docx4j.wml.PPr ppr = this.wmlObjectFactory.createPPr();
+		p.setPPr(ppr);
 		// Create object for spacing
-		org.docx4j.wml.PPrBase.Spacing pprbasespacing = this.wmlObjectFactory.createPPrBaseSpacing(); 
-		ppr.setSpacing(pprbasespacing); 
-		pprbasespacing.setBefore( BigInteger.valueOf(0) ); 
-		pprbasespacing.setAfter( BigInteger.valueOf(0) );
+		org.docx4j.wml.PPrBase.Spacing pprbasespacing = this.wmlObjectFactory.createPPrBaseSpacing();
+		ppr.setSpacing(pprbasespacing);
+		pprbasespacing.setBefore(BigInteger.valueOf(0));
+		pprbasespacing.setAfter(BigInteger.valueOf(0));
 		// Create object for r
-		org.docx4j.wml.R r = this.wmlObjectFactory.createR(); 
-		p.getContent().add( r); 
-		// Create object for separator (wrapped in JAXBElement) 
-		org.docx4j.wml.R.Separator rseparator = this.wmlObjectFactory.createRSeparator(); 
-		JAXBElement<org.docx4j.wml.R.Separator> rseparatorWrapped = this.wmlObjectFactory.createRSeparator(rseparator); 
-		r.getContent().add( rseparatorWrapped); 
+		org.docx4j.wml.R r = this.wmlObjectFactory.createR();
+		p.getContent().add(r);
+		// Create object for separator (wrapped in JAXBElement)
+		org.docx4j.wml.R.Separator rseparator = this.wmlObjectFactory.createRSeparator();
+		JAXBElement<org.docx4j.wml.R.Separator> rseparatorWrapped = this.wmlObjectFactory.createRSeparator(rseparator);
+		r.getContent().add(rseparatorWrapped);
 		// Create object for footnote
-		org.docx4j.wml.CTFtnEdn ftnedn2 = this.wmlObjectFactory.createCTFtnEdn(); 
-		footnotes.getFootnote().add( ftnedn2); 
-		ftnedn2.setId( BigInteger.valueOf( 0) ); 
+		org.docx4j.wml.CTFtnEdn ftnedn2 = this.wmlObjectFactory.createCTFtnEdn();
+		footnotes.getFootnote().add(ftnedn2);
+		ftnedn2.setId(BigInteger.valueOf(0));
 		ftnedn2.setType(org.docx4j.wml.STFtnEdn.CONTINUATION_SEPARATOR);
 		// Create object for p
-		org.docx4j.wml.P p2 = this.wmlObjectFactory.createP(); 
-		ftnedn2.getContent().add( p2); 
+		org.docx4j.wml.P p2 = this.wmlObjectFactory.createP();
+		ftnedn2.getContent().add(p2);
 		// Create object for pPr
-		org.docx4j.wml.PPr ppr2 = this.wmlObjectFactory.createPPr(); 
-		p2.setPPr(ppr2); 
+		org.docx4j.wml.PPr ppr2 = this.wmlObjectFactory.createPPr();
+		p2.setPPr(ppr2);
 		// Create object for spacing
-		org.docx4j.wml.PPrBase.Spacing pprbasespacing2 = this.wmlObjectFactory.createPPrBaseSpacing(); 
-		ppr2.setSpacing(pprbasespacing2); 
-		pprbasespacing2.setBefore( BigInteger.valueOf( 0) ); 
-		pprbasespacing2.setAfter( BigInteger.valueOf( 0) );
+		org.docx4j.wml.PPrBase.Spacing pprbasespacing2 = this.wmlObjectFactory.createPPrBaseSpacing();
+		ppr2.setSpacing(pprbasespacing2);
+		pprbasespacing2.setBefore(BigInteger.valueOf(0));
+		pprbasespacing2.setAfter(BigInteger.valueOf(0));
 		// Create object for r
-		org.docx4j.wml.R r2 = this.wmlObjectFactory.createR(); 
-		p2.getContent().add( r2); 
-		// Create object for continuationSeparator (wrapped in JAXBElement) 
-		org.docx4j.wml.R.ContinuationSeparator rcontinuationseparator = this.wmlObjectFactory.createRContinuationSeparator(); 
-		JAXBElement<org.docx4j.wml.R.ContinuationSeparator> rcontinuationseparatorWrapped = this.wmlObjectFactory.createRContinuationSeparator(rcontinuationseparator); 
-		r2.getContent().add( rcontinuationseparatorWrapped); 
+		org.docx4j.wml.R r2 = this.wmlObjectFactory.createR();
+		p2.getContent().add(r2);
+		// Create object for continuationSeparator (wrapped in JAXBElement)
+		org.docx4j.wml.R.ContinuationSeparator rcontinuationseparator = this.wmlObjectFactory
+				.createRContinuationSeparator();
+		JAXBElement<org.docx4j.wml.R.ContinuationSeparator> rcontinuationseparatorWrapped = this.wmlObjectFactory
+				.createRContinuationSeparator(rcontinuationseparator);
+		r2.getContent().add(rcontinuationseparatorWrapped);
 		return footnotes;
 	}
-	private org.docx4j.wml.P addFootnoteParagraph(){
+
+	/**
+	 * Creates a paragraph that contains a footnote element
+	 * 
+	 * @return : the created paragraph
+	 */
+	private org.docx4j.wml.P addFootnoteParagraph() {
 		org.docx4j.wml.CTFtnEdn ftnedn = this.wmlObjectFactory.createCTFtnEdn();
 		try {
 			org.docx4j.wml.CTFootnotes footnotes = this.fnp.getContents();
@@ -343,64 +516,82 @@ public class FidusToDocx {
 			System.err.println("\nome Error happen in the time of a footnote creation.");
 			e.printStackTrace();
 			return null;
-		}		
-	    ftnedn.setId( BigInteger.valueOf(++this.footnoteCounter) ); 
-	    // Create object for p
-	    org.docx4j.wml.P p = this.wmlObjectFactory.createP(); 
-	    ftnedn.getContent().add(p);
-	    
-        // Create object for pPr
-	    org.docx4j.wml.PPr ppr = this.wmlObjectFactory.createPPr(); 
-        p.setPPr(ppr); 
-        // Create object for pStyle
-        org.docx4j.wml.PPrBase.PStyle pprbasepstyle = this.wmlObjectFactory.createPPrBasePStyle(); 
-        ppr.setPStyle(pprbasepstyle); 
-        pprbasepstyle.setVal( "FootnoteText"); 
-        // Create object for r
-        org.docx4j.wml.R r = this.wmlObjectFactory.createR(); 
-        p.getContent().add( r); 
-        // Create object for rPr
-        org.docx4j.wml.RPr rpr = this.wmlObjectFactory.createRPr(); 
-        r.setRPr(rpr); 
-        // Create object for rStyle
-        org.docx4j.wml.RStyle rstyle = this.wmlObjectFactory.createRStyle(); 
-        rpr.setRStyle(rstyle); 
-        rstyle.setVal( "FootnoteReference"); 
-        // Create object for footnoteRef (wrapped in JAXBElement) 
-        org.docx4j.wml.R.FootnoteRef rfootnoteref = this.wmlObjectFactory.createRFootnoteRef(); 
-        JAXBElement<org.docx4j.wml.R.FootnoteRef> rfootnoterefWrapped = this.wmlObjectFactory.createRFootnoteRef(rfootnoteref); 
-        r.getContent().add( rfootnoterefWrapped); 
-        // Create object for r
-        org.docx4j.wml.R r2 = this.wmlObjectFactory.createR(); 
-        p.getContent().add( r2); 
-        // Create object for t (wrapped in JAXBElement) 
-        org.docx4j.wml.Text text = this.wmlObjectFactory.createText(); 
-        JAXBElement<org.docx4j.wml.Text> textWrapped = this.wmlObjectFactory.createRT(text); 
-        r2.getContent().add( textWrapped); 
-        text.setValue(" "); 
-        text.setSpace("preserve"); 
-        return p;
+		}
+		ftnedn.setId(BigInteger.valueOf(++this.footnoteCounter));
+		// Create object for p
+		org.docx4j.wml.P p = this.wmlObjectFactory.createP();
+		ftnedn.getContent().add(p);
+
+		// Create object for pPr
+		org.docx4j.wml.PPr ppr = this.wmlObjectFactory.createPPr();
+		p.setPPr(ppr);
+		// Create object for pStyle
+		org.docx4j.wml.PPrBase.PStyle pprbasepstyle = this.wmlObjectFactory.createPPrBasePStyle();
+		ppr.setPStyle(pprbasepstyle);
+		pprbasepstyle.setVal("FootnoteText");
+		// Create object for r
+		org.docx4j.wml.R r = this.wmlObjectFactory.createR();
+		p.getContent().add(r);
+		// Create object for rPr
+		org.docx4j.wml.RPr rpr = this.wmlObjectFactory.createRPr();
+		r.setRPr(rpr);
+		// Create object for rStyle
+		org.docx4j.wml.RStyle rstyle = this.wmlObjectFactory.createRStyle();
+		rpr.setRStyle(rstyle);
+		rstyle.setVal("FootnoteReference");
+		// Create object for footnoteRef (wrapped in JAXBElement)
+		org.docx4j.wml.R.FootnoteRef rfootnoteref = this.wmlObjectFactory.createRFootnoteRef();
+		JAXBElement<org.docx4j.wml.R.FootnoteRef> rfootnoterefWrapped = this.wmlObjectFactory
+				.createRFootnoteRef(rfootnoteref);
+		r.getContent().add(rfootnoterefWrapped);
+		// Create object for r
+		org.docx4j.wml.R r2 = this.wmlObjectFactory.createR();
+		p.getContent().add(r2);
+		// Create object for t (wrapped in JAXBElement)
+		org.docx4j.wml.Text text = this.wmlObjectFactory.createText();
+		JAXBElement<org.docx4j.wml.Text> textWrapped = this.wmlObjectFactory.createRT(text);
+		r2.getContent().add(textWrapped);
+		text.setValue(" ");
+		text.setSpace("preserve");
+		return p;
 	}
+
+	/**
+	 * Creates a run to add footnote text to it
+	 * 
+	 * @param paragraph
+	 *            : the footnote paragraph
+	 * @return
+	 */
 	public org.docx4j.wml.R createFootnoteRun(org.docx4j.wml.P paragraph) {
 		org.docx4j.wml.R r = this.createARun(paragraph, null);
 		// Create object for rPr
-		org.docx4j.wml.RPr rpr = this.wmlObjectFactory.createRPr(); 
+		org.docx4j.wml.RPr rpr = this.wmlObjectFactory.createRPr();
 		r.setRPr(rpr);
 		// Create object for vertAlign
-		org.docx4j.wml.CTVerticalAlignRun verticalalignrun = this.wmlObjectFactory.createCTVerticalAlignRun(); 
-        rpr.setVertAlign(verticalalignrun); 
-        verticalalignrun.setVal(org.docx4j.wml.STVerticalAlignRun.SUPERSCRIPT);
+		org.docx4j.wml.CTVerticalAlignRun verticalalignrun = this.wmlObjectFactory.createCTVerticalAlignRun();
+		rpr.setVertAlign(verticalalignrun);
+		verticalalignrun.setVal(org.docx4j.wml.STVerticalAlignRun.SUPERSCRIPT);
 		// Create object for rStyle
-		org.docx4j.wml.RStyle rstyle = this.wmlObjectFactory.createRStyle(); 
-		rpr.setRStyle(rstyle); 
-		rstyle.setVal("FootnoteReference"); 
-		// Create object for footnoteReference (wrapped in JAXBElement) 
-		org.docx4j.wml.CTFtnEdnRef ftnednref = this.wmlObjectFactory.createCTFtnEdnRef(); 
-		JAXBElement<org.docx4j.wml.CTFtnEdnRef> ftnednrefWrapped = this.wmlObjectFactory.createRFootnoteReference(ftnednref); 
-		r.getContent().add( ftnednrefWrapped); 
-		ftnednref.setId( BigInteger.valueOf(this.footnoteCounter));
+		org.docx4j.wml.RStyle rstyle = this.wmlObjectFactory.createRStyle();
+		rpr.setRStyle(rstyle);
+		rstyle.setVal("FootnoteReference");
+		// Create object for footnoteReference (wrapped in JAXBElement)
+		org.docx4j.wml.CTFtnEdnRef ftnednref = this.wmlObjectFactory.createCTFtnEdnRef();
+		JAXBElement<org.docx4j.wml.CTFtnEdnRef> ftnednrefWrapped = this.wmlObjectFactory
+				.createRFootnoteReference(ftnednref);
+		r.getContent().add(ftnednrefWrapped);
+		ftnednref.setId(BigInteger.valueOf(this.footnoteCounter));
 		return r;
 	}
+
+	/**
+	 * Creates comment part to the docx if not exists or returns the existing
+	 * one
+	 * 
+	 * @return : the comment part of the docx file
+	 * @throws InvalidFormatException
+	 */
 	private org.docx4j.wml.Comments addCommentPart() throws InvalidFormatException {
 		// Create and add a Comments Part
 		org.docx4j.openpackaging.parts.WordprocessingML.CommentsPart commentsPart = new org.docx4j.openpackaging.parts.WordprocessingML.CommentsPart();
@@ -411,12 +602,27 @@ public class FidusToDocx {
 		return comments;
 	}
 
+	/**
+	 * Acts for creating contents for each part of the Fidus file
+	 * 
+	 * @param child
+	 *            : each child of the contents of the document.json
+	 */
 	private void createPart(Child child) {
 		this.createRuns(null, child, null, 0, BigInteger.valueOf(0), null, null);
 	}
 
+	/**
+	 * Create a new run if run is null or return the existing ones
+	 * 
+	 * @param paragraph
+	 *            : the paragraph that the run must be add to
+	 * @param run
+	 *            : null if new run is needed
+	 * @return new run
+	 */
 	private org.docx4j.wml.R createARun(org.docx4j.wml.P paragraph, org.docx4j.wml.R run) {
-		if(run!=null)
+		if (run != null)
 			return run;
 		paragraph = this.createAParagraph(paragraph);
 		run = this.wmlObjectFactory.createR();
@@ -424,6 +630,13 @@ public class FidusToDocx {
 		return run;
 	}
 
+	/**
+	 * Create a paragraph if the parameter is null
+	 * 
+	 * @param paragraph
+	 *            : null if new paragraph is needed
+	 * @return new paragraph
+	 */
 	private org.docx4j.wml.P createAParagraph(org.docx4j.wml.P paragraph) {
 		if (paragraph != null)
 			return paragraph;
@@ -432,27 +645,58 @@ public class FidusToDocx {
 		return paragraph;
 	}
 
+	/**
+	 * Create paragraph for meta data part of the docx
+	 * 
+	 * @param sdtcontentblock
+	 * @return new paragraph
+	 */
 	private org.docx4j.wml.P createAParagraphForSdtCB(org.docx4j.wml.SdtContentBlock sdtcontentblock) {
 		org.docx4j.wml.P paragraph = this.wmlObjectFactory.createP();
 		sdtcontentblock.getContent().add(paragraph);
 		return paragraph;
 	}
 
+	/**
+	 * Create a BooleanDefaultTrue object for docx4j based on the java boolean
+	 * 
+	 * @param value
+	 *            : the needed boolean value
+	 * @return a BooleanDefaultTrue variable equals to passed boolean value
+	 */
 	private org.docx4j.wml.BooleanDefaultTrue bool(boolean value) {
 		org.docx4j.wml.BooleanDefaultTrue boolValue = new org.docx4j.wml.BooleanDefaultTrue();
 		boolValue.setVal(value);
 		return boolValue;
 	}
 
+	/**
+	 * Creates RPr for a run
+	 * 
+	 * @param run
+	 *            : the desired run that properties is needed for that
+	 * @return the created run properties
+	 */
 	private org.docx4j.wml.RPr createRunProperties(org.docx4j.wml.R run) {
 		org.docx4j.wml.RPr rpr = run.getRPr();
-		if(rpr==null){
+		if (rpr == null) {
 			rpr = this.wmlObjectFactory.createRPr();
 			run.setRPr(rpr);
 		}
 		return rpr;
 	}
 
+	/**
+	 * Adds the passed text to the run of the paragraph
+	 * 
+	 * @param paragraph
+	 *            : a reference to the paragraph
+	 * @param run
+	 *            : a reference to the run or null to create a new run
+	 * @param str
+	 *            : the text string
+	 * @return the paragraph to use in a recursive add of text
+	 */
 	private org.docx4j.wml.P addTextToRun(org.docx4j.wml.P paragraph, org.docx4j.wml.R run, String str) {
 		run = this.createARun(paragraph, run);
 		org.docx4j.wml.Text text = this.wmlObjectFactory.createText();
@@ -462,14 +706,32 @@ public class FidusToDocx {
 		run.getContent().add(textWrapped);
 		return paragraph;
 	}
-	private org.docx4j.wml.PPr getOrCreatePPr(org.docx4j.wml.P paragraph){
+
+	/**
+	 * Create a PPr for a paragraph or returns the existing one
+	 * 
+	 * @param paragraph
+	 *            : the intended paragraph
+	 * @return the created paragraph properties
+	 */
+	private org.docx4j.wml.PPr getOrCreatePPr(org.docx4j.wml.P paragraph) {
 		org.docx4j.wml.PPr ppr = paragraph.getPPr();
-		if(ppr==null){
+		if (ppr == null) {
 			ppr = this.wmlObjectFactory.createPPr();
 			paragraph.setPPr(ppr);
 		}
 		return ppr;
 	}
+
+	/**
+	 * Create Heading1 ... Heading6
+	 * 
+	 * @param paragraph
+	 *            : the intended paragraph or null to create a new one
+	 * @param degree
+	 *            : the degree of the heading
+	 * @return the heading paragraph
+	 */
 	private org.docx4j.wml.P setHeaderParagraph(org.docx4j.wml.P paragraph, int degree) {
 		paragraph = this.createAParagraph(paragraph);
 		// Create object for pPr
@@ -483,17 +745,38 @@ public class FidusToDocx {
 		return paragraph;
 	}
 
+	/**
+	 * This function is the heart of this class. This function is called
+	 * recursively to create parts based on the content of a Child element
+	 * inside of the Fidus content
+	 * 
+	 * @param paragraph
+	 *            : the working paragraph or null
+	 * @param child
+	 *            : the working Child object from doc object
+	 * @param run
+	 *            : the working run or null
+	 * @param level
+	 *            : the level of the child in the tree
+	 * @param listId
+	 *            : the latest ordered list id
+	 * @param figure
+	 *            : if observed a figure have a reference to that
+	 * @param comments
+	 *            : if some comments observed list of them
+	 * @return final created or changed paragraph
+	 */
 	private org.docx4j.wml.P createRuns(org.docx4j.wml.P paragraph, Child child, org.docx4j.wml.R run, int level,
 			BigInteger listId, Figure figure, ArrayList<org.docx4j.wml.Comments.Comment> comments) {
 		boolean footnoteVisited = false;
 		org.docx4j.wml.P tempParagraph = null;
 		if (child.getType() == ChildrenTypes.textnode) {
-			if (comments != null) { 
-				if(run != null)
+			if (comments != null) {
+				if (run != null)
 					paragraph.getContent().remove(run);
 				for (int i = 0; i < comments.size(); i++)
 					this.startComment(paragraph, comments.get(i));
-				if(run != null)
+				if (run != null)
 					paragraph.getContent().add(run);
 			}
 			TextNode textNode = (TextNode) child;
@@ -506,279 +789,315 @@ public class FidusToDocx {
 			}
 		} else {
 			NodeJson element = (NodeJson) child;
-			
-				// Does not need to create a run!!!
-				if (element.getNn().getType() == NodeType.p) {
-					paragraph = this.createAParagraph(paragraph);
-					for (int i = 0; i < element.getC().size(); i++)
-						this.createRuns(paragraph, element.getC().get(i), run, level, listId, figure, comments);
-				} else {
-					if (element.getNn().getType() == NodeType.b) {
-						run = this.createARun(paragraph, run);
-						org.docx4j.wml.RPr rpr = this.createRunProperties(run);
-						rpr.setB(this.bool(true));
-					} else if (element.getNn().getType() == NodeType.i) {
-						run = this.createARun(paragraph, run);
-						org.docx4j.wml.RPr rpr = this.createRunProperties(run);
-						rpr.setI(this.bool(true));
-					} else if (element.getNn().getType() == NodeType.h1) {
-						paragraph = this.setHeaderParagraph(paragraph, 1);
-					} else if (element.getNn().getType() == NodeType.h2) {
-						paragraph = this.setHeaderParagraph(paragraph, 2);
-					} else if (element.getNn().getType() == NodeType.h3) {
-						paragraph = this.setHeaderParagraph(paragraph, 3);
-					} else if (element.getNn().getType() == NodeType.h4) {
-						paragraph = this.setHeaderParagraph(paragraph, 4);
-					} else if (element.getNn().getType() == NodeType.h5) {
-						paragraph = this.setHeaderParagraph(paragraph, 5);
-					} else if (element.getNn().getType() == NodeType.h6) {
-						paragraph = this.setHeaderParagraph(paragraph, 6);
-					} else if (element.getNn().getType() == NodeType.blockquote) {
-						paragraph = this.setQuoteParagraph(paragraph);
-					} else if (element.getNn().getType() == NodeType.ol) {
-						long indent = FidusToDocx.getIndentstep() * level;
-						listId = this.addNewNumberingList(indent, NumberingType.ol);
-						paragraph = null;
-						level++;
-					} else if (element.getNn().getType() == NodeType.ul) {
-						long indent = FidusToDocx.getIndentstep() * level;
-						listId = this.addNewNumberingList(indent, NumberingType.ul);
-						paragraph = null;
-						level++;
-					} else if (element.getNn().getType() == NodeType.li) {
-						paragraph = this.setListParagraph(paragraph, listId);
-					} else if (element.getNn().getType() == NodeType.a) {
-						run	= this.createHyperlinkRun(paragraph, run, element);
-					} else if (element.getNn().getType() == NodeType.figure) {
-						// add an empty paragraph
-						this.createAnEmptyParagraph();
-						//
-						figure = new Figure();
-						if (element.getAttributeValue("data-equation") != null)
-							figure.setDataEquation(element.getAttributeValue("data-equation"));
-						if (element.getAttributeValue("data-image") != null)
-							figure.setDataImage(Long.parseLong(element.getAttributeValue("data-image")));
-						if (element.getAttributeValue("data-figure-category") != null)
-							for (FigureCategory cat : FigureCategory.values())
-								if (cat.name().equalsIgnoreCase(element.getAttributeValue("data-figure-category"))) {
-									figure.setDataFigureCategory(cat);
-									break;
-								}
-						if (element.getAttributeValue("data-caption") != null)
-							figure.setDataCaption(element.getAttributeValue("data-caption"));
-						//
-					} else if (element.getNn().getType() == NodeType.br) {
-						paragraph = this.addBreakLineRun(paragraph, run);
-					} else if (element.getNn().getType() == NodeType.img) {
-						if (figure != null) {
-							figure.setPath(element.getAttributeValue("src"));
-							try {
-								paragraph = figure.addIt2Docx(this.wordMLPackage, this.images,
-										this.getMediaDirectoryPrefixPath());
-							} catch (Exception e) {
-								e.printStackTrace();
+
+			// Does not need to create a run!!!
+			if (element.getNn().getType() == NodeType.p) {
+				paragraph = this.createAParagraph(paragraph);
+				for (int i = 0; i < element.getC().size(); i++)
+					this.createRuns(paragraph, element.getC().get(i), run, level, listId, figure, comments);
+			} else {
+				if (element.getNn().getType() == NodeType.b) {
+					run = this.createARun(paragraph, run);
+					org.docx4j.wml.RPr rpr = this.createRunProperties(run);
+					rpr.setB(this.bool(true));
+				} else if (element.getNn().getType() == NodeType.i) {
+					run = this.createARun(paragraph, run);
+					org.docx4j.wml.RPr rpr = this.createRunProperties(run);
+					rpr.setI(this.bool(true));
+				} else if (element.getNn().getType() == NodeType.h1) {
+					paragraph = this.setHeaderParagraph(paragraph, 1);
+				} else if (element.getNn().getType() == NodeType.h2) {
+					paragraph = this.setHeaderParagraph(paragraph, 2);
+				} else if (element.getNn().getType() == NodeType.h3) {
+					paragraph = this.setHeaderParagraph(paragraph, 3);
+				} else if (element.getNn().getType() == NodeType.h4) {
+					paragraph = this.setHeaderParagraph(paragraph, 4);
+				} else if (element.getNn().getType() == NodeType.h5) {
+					paragraph = this.setHeaderParagraph(paragraph, 5);
+				} else if (element.getNn().getType() == NodeType.h6) {
+					paragraph = this.setHeaderParagraph(paragraph, 6);
+				} else if (element.getNn().getType() == NodeType.blockquote) {
+					paragraph = this.setQuoteParagraph(paragraph);
+				} else if (element.getNn().getType() == NodeType.ol) {
+					long indent = FidusToDocx.getIndentstep() * level;
+					listId = this.addNewNumberingList(indent, NumberingType.ol);
+					paragraph = null;
+					level++;
+				} else if (element.getNn().getType() == NodeType.ul) {
+					long indent = FidusToDocx.getIndentstep() * level;
+					listId = this.addNewNumberingList(indent, NumberingType.ul);
+					paragraph = null;
+					level++;
+				} else if (element.getNn().getType() == NodeType.li) {
+					paragraph = this.setListParagraph(paragraph, listId);
+				} else if (element.getNn().getType() == NodeType.a) {
+					run = this.createHyperlinkRun(paragraph, run, element);
+				} else if (element.getNn().getType() == NodeType.figure) {
+					// add an empty paragraph
+					this.createAnEmptyParagraph();
+					//
+					figure = new Figure();
+					if (element.getAttributeValue("data-equation") != null)
+						figure.setDataEquation(element.getAttributeValue("data-equation"));
+					if (element.getAttributeValue("data-image") != null)
+						figure.setDataImage(Long.parseLong(element.getAttributeValue("data-image")));
+					if (element.getAttributeValue("data-figure-category") != null)
+						for (FigureCategory cat : FigureCategory.values())
+							if (cat.name().equalsIgnoreCase(element.getAttributeValue("data-figure-category"))) {
+								figure.setDataFigureCategory(cat);
+								break;
 							}
-							figure = null;
+					if (element.getAttributeValue("data-caption") != null)
+						figure.setDataCaption(element.getAttributeValue("data-caption"));
+					//
+				} else if (element.getNn().getType() == NodeType.br) {
+					paragraph = this.addBreakLineRun(paragraph, run);
+				} else if (element.getNn().getType() == NodeType.img) {
+					if (figure != null) {
+						figure.setPath(element.getAttributeValue("src"));
+						try {
+							paragraph = figure.addIt2Docx(this.wordMLPackage, this.images,
+									this.mediaDirectoryPrefixPath);
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-					} else if (element.getNn().getType() == NodeType.pre) {
-						// just capture the PRE to capture its child in CODE
-					} else if (element.getNn().getType() == NodeType.code) {
-						if(paragraph != null && paragraph.getPPr()!=null 
-								&& paragraph.getPPr().getPStyle()!=null
-								&& paragraph.getPPr().getPStyle().getVal().equals("FWQuote")){
-							// Do Nothing. Just visit this node and let go to the children.
-						} else{
-							for (int i = 0; i < element.getC().size(); i++)
-								this.addCodeBlock(element.getC().get(i), paragraph);
-							return null;
-						}
-					} else if (element.getNn().getType() == NodeType.div) {
-						if(figure != null)
-						{
-							// if does not have any child
-							if (element.getC() == null){
-								if (element.getAttributeValue("class") != null
-										&& element.getAttributeValue("class").equalsIgnoreCase("figure-equation")) {
-									if (element.getAttributeValue("data-equation") != null) {
-										String latexMath = "$" + element.getAttributeValue("data-equation") + "$";
-										paragraph = this.addEquationDiv(paragraph, latexMath);
-										figure = null;
-										return paragraph; // Especially in this cases (Equations) we have to prevent processing of children of this element because we got data from attributes.
-									} else {
-										figure = null;
-										return null;
-									}
-								}
-							} else if (figure.getDataEquation() != null) {
-								if (element.getAttributeValue("class") != null
-										&& element.getAttributeValue("class").equalsIgnoreCase("figure-equation")) {
-									if (element.getAttributeValue("data-equation") != null) {
-										String latexMath = "$" + element.getAttributeValue("data-equation") + "$";
-										paragraph = this.addEquationDiv(paragraph, latexMath);
-										figure = null;
-										return paragraph; // Especially in this cases (Equations) we have to prevent processing of children of this element because we got data from attributes. 
-									} else {
-										figure = null;
-										return null;
-									}
-								}
-							}
-						}
-						if (figure == null && element.getC() != null) 
-							return null;	// just capture the DIV if the document has it. seen a FIGURE element just let it goes ahead to be able to capture IMG
-						
-					} else if (element.getNn().getType() == NodeType.figcaption) {
-						if (paragraph == null && element.getC().size() > 1)
-							paragraph = this.createAParagraph(paragraph);
-					} else if (element.getNn().getType() == NodeType.span) {						
-						if(element.hasAttribute("class") && element.getAttributeValue("class").equalsIgnoreCase("equation") && element.hasAttribute("data-equation")) 
-						{
-							String latexMath = "$" + element.getAttributeValue("data-equation") + "$";
-							paragraph = this.addEquationInline(paragraph, latexMath);
-							return paragraph; // Especially in this cases (Equations) we have to prevent processing of children of this element because we got data from attributes.
-						}else if (element.hasAttribute("class") && element.getAttributeValue("class").equalsIgnoreCase("citation")) {
-							String idStr = element.getAttributeValue("data-bib-entry");
-							String textBefore = element.getAttributeValue("data-bib-before");
-							String[] textBefores = textBefore.split(",,,");
-							String pageNumber = element.getAttributeValue("data-bib-page");
-							String[] pageNumbers = pageNumber.split(",,,");
-							String[] ids = idStr.split(",");
-							List<BibliographyEntry> entries = new ArrayList<BibliographyEntry>();
-							for(int i=0; i<ids.length; i++){
-								Long id = Long.parseLong(ids[i]);
-								BibliographyEntry entry = this.bibliography.getBibliographyEntry(id);
-								entries.add(entry);
-							}
-							paragraph = this.createCitation(paragraph, entries, textBefores, pageNumbers);
-						}
-						else if (element.hasAttribute("data-figure-category")) 
-						{
-							FigureCategory category = null;
-							for (FigureCategory cat : FigureCategory.values())
-								if (cat.name().equalsIgnoreCase(element.getAttributeValue("data-figure-category"))) {
-									category = cat;
-									break;
-								}
-							if (category != null) {
-								if (category == FigureCategory.figure)
-									paragraph = this.setCaptionParagraph(paragraph, category,
-											++this.figureCaptionCounter);
-								else if (category == FigureCategory.table)
-									paragraph = this.setCaptionParagraph(paragraph, category,
-											++this.tableCaptionCounter);
-								else if (category == FigureCategory.photo)
-									paragraph = this.setCaptionParagraph(paragraph, category,
-											++this.photoCaptionCounter);
-								else if (category == FigureCategory.equation)
-									paragraph = this.setCaptionParagraph(paragraph, category,
-											++this.equationCaptionCounter);
-								return paragraph; // It prevents further
-													// analysis of its children
-							}
-						} else if (paragraph == null && element.hasAttribute("data-caption")) {
-							paragraph = this.setCaptionParagraph(paragraph, FigureCategory.none, null);
-						} else if (element.hasAttribute("class")
-								&& element.getAttributeValue("class").equalsIgnoreCase("comment")) {
-							Long commentId = Long.parseLong(element.getAttributeValue("data-id"));
-							fidusWriter.model.document.Comment commentObj = this.doc.getComments()
-									.getComment(commentId);
-							comments = this.createComment(commentObj);
-						} else if (element.hasAttribute("class")
-								&& element.getAttributeValue("class").equalsIgnoreCase("footnote")) {
-							tempParagraph = paragraph;
-							footnoteVisited = true;
-							this.addHyperlinksToFNP = true;
-							paragraph = this.addFootnoteParagraph();
-							if(paragraph==null){
-								footnoteVisited = false;
-								paragraph = tempParagraph;
-							} else{
-								this.createFootnoteRun(tempParagraph);
-							}
-						}
+						figure = null;
+					}
+				} else if (element.getNn().getType() == NodeType.pre) {
+					// just capture the PRE to capture its child in CODE
+				} else if (element.getNn().getType() == NodeType.code) {
+					if (paragraph != null && paragraph.getPPr() != null && paragraph.getPPr().getPStyle() != null
+							&& paragraph.getPPr().getPStyle().getVal().equals("FWQuote")) {
+						// Do Nothing. Just visit this node and let go to the
+						// children.
 					} else {
+						for (int i = 0; i < element.getC().size(); i++)
+							this.addCodeBlock(element.getC().get(i), paragraph);
 						return null;
 					}
-					//
-					if (element.getC() != null) 
-						for (int i = 0; i < element.getC().size(); i++)
-							this.createRuns(paragraph, element.getC().get(i), run, level, listId, figure, comments);
-					if(footnoteVisited){
-						paragraph = tempParagraph;
-						footnoteVisited = false;
-						this.addHyperlinksToFNP = false;
+				} else if (element.getNn().getType() == NodeType.div) {
+					if (figure != null) {
+						// if does not have any child
+						if (element.getC() == null) {
+							if (element.getAttributeValue("class") != null
+									&& element.getAttributeValue("class").equalsIgnoreCase("figure-equation")) {
+								if (element.getAttributeValue("data-equation") != null) {
+									String latexMath = "$" + element.getAttributeValue("data-equation") + "$";
+									paragraph = this.addEquationDiv(paragraph, latexMath);
+									figure = null;
+									return paragraph; // Especially in this
+														// cases (Equations) we
+														// have to prevent
+														// processing of
+														// children of this
+														// element because we
+														// got data from
+														// attributes.
+								} else {
+									figure = null;
+									return null;
+								}
+							}
+						} else if (figure.getDataEquation() != null) {
+							if (element.getAttributeValue("class") != null
+									&& element.getAttributeValue("class").equalsIgnoreCase("figure-equation")) {
+								if (element.getAttributeValue("data-equation") != null) {
+									String latexMath = "$" + element.getAttributeValue("data-equation") + "$";
+									paragraph = this.addEquationDiv(paragraph, latexMath);
+									figure = null;
+									return paragraph; // Especially in this
+														// cases (Equations) we
+														// have to prevent
+														// processing of
+														// children of this
+														// element because we
+														// got data from
+														// attributes.
+								} else {
+									figure = null;
+									return null;
+								}
+							}
+						}
 					}
-					
+					if (figure == null && element.getC() != null)
+						return null; // just capture the DIV if the document has
+										// it. seen a FIGURE element just let it
+										// goes ahead to be able to capture IMG
+
+				} else if (element.getNn().getType() == NodeType.figcaption) {
+					if (paragraph == null && element.getC().size() > 1)
+						paragraph = this.createAParagraph(paragraph);
+				} else if (element.getNn().getType() == NodeType.span) {
+					if (element.hasAttribute("class") && element.getAttributeValue("class").equalsIgnoreCase("equation")
+							&& element.hasAttribute("data-equation")) {
+						String latexMath = "$" + element.getAttributeValue("data-equation") + "$";
+						paragraph = this.addEquationInline(paragraph, latexMath);
+						return paragraph; // Especially in this cases
+											// (Equations) we have to prevent
+											// processing of children of this
+											// element because we got data from
+											// attributes.
+					} else if (element.hasAttribute("class")
+							&& element.getAttributeValue("class").equalsIgnoreCase("citation")) {
+						String idStr = element.getAttributeValue("data-bib-entry");
+						String textBefore = element.getAttributeValue("data-bib-before");
+						String[] textBefores = textBefore.split(",,,");
+						String pageNumber = element.getAttributeValue("data-bib-page");
+						String[] pageNumbers = pageNumber.split(",,,");
+						String[] ids = idStr.split(",");
+						List<BibliographyEntry> entries = new ArrayList<BibliographyEntry>();
+						for (int i = 0; i < ids.length; i++) {
+							Long id = Long.parseLong(ids[i]);
+							BibliographyEntry entry = this.bibliography.getBibliographyEntry(id);
+							entries.add(entry);
+						}
+						paragraph = this.createCitation(paragraph, entries, textBefores, pageNumbers);
+					} else if (element.hasAttribute("data-figure-category")) {
+						FigureCategory category = null;
+						for (FigureCategory cat : FigureCategory.values())
+							if (cat.name().equalsIgnoreCase(element.getAttributeValue("data-figure-category"))) {
+								category = cat;
+								break;
+							}
+						if (category != null) {
+							if (category == FigureCategory.figure)
+								paragraph = this.setCaptionParagraph(paragraph, category, ++this.figureCaptionCounter);
+							else if (category == FigureCategory.table)
+								paragraph = this.setCaptionParagraph(paragraph, category, ++this.tableCaptionCounter);
+							else if (category == FigureCategory.photo)
+								paragraph = this.setCaptionParagraph(paragraph, category, ++this.photoCaptionCounter);
+							else if (category == FigureCategory.equation)
+								paragraph = this.setCaptionParagraph(paragraph, category,
+										++this.equationCaptionCounter);
+							return paragraph; // It prevents further
+												// analysis of its children
+						}
+					} else if (paragraph == null && element.hasAttribute("data-caption")) {
+						paragraph = this.setCaptionParagraph(paragraph, FigureCategory.none, null);
+					} else if (element.hasAttribute("class")
+							&& element.getAttributeValue("class").equalsIgnoreCase("comment")) {
+						Long commentId = Long.parseLong(element.getAttributeValue("data-id"));
+						fidusWriter.model.document.Comment commentObj = this.doc.getComments().getComment(commentId);
+						comments = this.createComment(commentObj);
+					} else if (element.hasAttribute("class")
+							&& element.getAttributeValue("class").equalsIgnoreCase("footnote")) {
+						tempParagraph = paragraph;
+						footnoteVisited = true;
+						this.addHyperlinksToFNP = true;
+						paragraph = this.addFootnoteParagraph();
+						if (paragraph == null) {
+							footnoteVisited = false;
+							paragraph = tempParagraph;
+						} else {
+							this.createFootnoteRun(tempParagraph);
+						}
+					}
+				} else {
+					return null;
 				}
+				//
+				if (element.getC() != null)
+					for (int i = 0; i < element.getC().size(); i++)
+						this.createRuns(paragraph, element.getC().get(i), run, level, listId, figure, comments);
+				if (footnoteVisited) {
+					paragraph = tempParagraph;
+					footnoteVisited = false;
+					this.addHyperlinksToFNP = false;
+				}
+
+			}
 		}
 		return paragraph;
 	}
+
+	/**
+	 * Creates a run for inserting a hyperlink
+	 * 
+	 * @param paragraph
+	 *            : the intended paragraph or null
+	 * @param run
+	 *            : the intended run or null
+	 * @param element
+	 *            : a NodeJson element that contains hyperlink data
+	 * @return the created run
+	 */
 	private org.docx4j.wml.R createHyperlinkRun(org.docx4j.wml.P paragraph, org.docx4j.wml.R run, NodeJson element) {
 		paragraph = this.createAParagraph(paragraph);
 		String href = null;
 		String title = null;
-		if(element.hasAttribute("href"))
+		if (element.hasAttribute("href"))
 			href = element.getAttributeValue("href");
-		if(element.hasAttribute("title"))
+		if (element.hasAttribute("title"))
 			title = element.getAttributeValue("title");
 		// We need to add a relationship to word/_rels/document.xml.rels
-		// but since its external, we don't use the 
+		// but since its external, we don't use the
 		// usual wordMLPackage.getMainDocumentPart().addTargetPart
 		// mechanism
 		org.docx4j.relationships.ObjectFactory relsObjectfactory = new org.docx4j.relationships.ObjectFactory();
-		
+
 		org.docx4j.relationships.Relationship rel = relsObjectfactory.createRelationship();
-		rel.setType( org.docx4j.openpackaging.parts.relationships.Namespaces.HYPERLINK);
+		rel.setType(org.docx4j.openpackaging.parts.relationships.Namespaces.HYPERLINK);
 		rel.setTarget(href);
 		rel.setTargetMode("External");
-		if(this.addHyperlinksToFNP)
+		if (this.addHyperlinksToFNP)
 			this.fnp.getRelationshipsPart(true).addRelationship(rel);
 		else
 			this.mdp.getRelationshipsPart(true).addRelationship(rel);
-		
-		
-		
-		// Create object for hyperlink (wrapped in JAXBElement) 
-		org.docx4j.wml.P.Hyperlink phyperlink = this.wmlObjectFactory.createPHyperlink(); 
-	    JAXBElement<org.docx4j.wml.P.Hyperlink> phyperlinkWrapped = this.wmlObjectFactory.createPHyperlink(phyperlink); 
-	    paragraph.getContent().add( phyperlinkWrapped); 
-	    // Create object for r
-	    if(run==null)
-	    	run = this.wmlObjectFactory.createR();
-	    else{
-	    	if(paragraph.getContent().contains(run))
-	    		paragraph.getContent().remove(run);
-	    }
-	    phyperlink.getContent().add(run);
-	    // Create object for rPr
-	    org.docx4j.wml.RPr rpr = this.createRunProperties(run);
-	    // Create object for rStyle
-	    org.docx4j.wml.RStyle rstyle = this.wmlObjectFactory.createRStyle(); 
-	    rpr.setRStyle(rstyle); 
-	    rstyle.setVal( "Hyperlink");
-	    // addRelationship sets the rel's @Id
-	    phyperlink.setId( rel.getId());
-	    if(title!=null && title.trim().length()>0)
-	    	phyperlink.setTooltip(title);
+		// Create object for hyperlink (wrapped in JAXBElement)
+		org.docx4j.wml.P.Hyperlink phyperlink = this.wmlObjectFactory.createPHyperlink();
+		JAXBElement<org.docx4j.wml.P.Hyperlink> phyperlinkWrapped = this.wmlObjectFactory.createPHyperlink(phyperlink);
+		paragraph.getContent().add(phyperlinkWrapped);
+		// Create object for r
+		if (run == null)
+			run = this.wmlObjectFactory.createR();
+		else {
+			if (paragraph.getContent().contains(run))
+				paragraph.getContent().remove(run);
+		}
+		phyperlink.getContent().add(run);
+		// Create object for rPr
+		org.docx4j.wml.RPr rpr = this.createRunProperties(run);
+		// Create object for rStyle
+		org.docx4j.wml.RStyle rstyle = this.wmlObjectFactory.createRStyle();
+		rpr.setRStyle(rstyle);
+		rstyle.setVal("Hyperlink");
+		// addRelationship sets the rel's @Id
+		phyperlink.setId(rel.getId());
+		if (title != null && title.trim().length() > 0)
+			phyperlink.setTooltip(title);
 		return run;
 	}
 
-	private org.docx4j.wml.P createCitation(org.docx4j.wml.P paragraph, List<BibliographyEntry> entries, String[] textBefores, String[] pageNumbers) {
-		if(entries==null || entries.size()==0)
+	/**
+	 * Creates a citation in docx
+	 * 
+	 * @param paragraph
+	 *            : the intended paragraph
+	 * @param entries
+	 *            : list of sources used in this citation
+	 * @param textBefores
+	 *            : the text before citation
+	 * @param pageNumbers
+	 *            : the references pages of the source
+	 * @return the created paragraph
+	 */
+	private org.docx4j.wml.P createCitation(org.docx4j.wml.P paragraph, List<BibliographyEntry> entries,
+			String[] textBefores, String[] pageNumbers) {
+		if (entries == null || entries.size() == 0)
 			return paragraph;
 		//
 		paragraph = this.createAParagraph(paragraph);
 		//
-		for(int i=0; i<textBefores.length;i++)
-		{
+		for (int i = 0; i < textBefores.length; i++) {
 			org.docx4j.wml.R run = this.createARun(paragraph, null);
-			this.addTextToRun(paragraph, run, "["+textBefores[i]+"]");
+			this.addTextToRun(paragraph, run, "[" + textBefores[i] + "]");
 			// Create object for rPr
-		    org.docx4j.wml.RPr rpr = this.createRunProperties(run);
-		    // Create object for rStyle
-		    org.docx4j.wml.RStyle rstyle = this.wmlObjectFactory.createRStyle(); 
-		    rpr.setRStyle(rstyle); 
-		    rstyle.setVal("FWTextBeforeCitationChar");
+			org.docx4j.wml.RPr rpr = this.createRunProperties(run);
+			// Create object for rStyle
+			org.docx4j.wml.RStyle rstyle = this.wmlObjectFactory.createRStyle();
+			rpr.setRStyle(rstyle);
+			rstyle.setVal("FWTextBeforeCitationChar");
 		}
 		// Create object for sdt (wrapped in JAXBElement)
 		org.docx4j.wml.SdtRun sdtrun = wmlObjectFactory.createSdtRun();
@@ -789,7 +1108,8 @@ public class FidusToDocx {
 		sdtrun.setSdtPr(sdtpr);
 		// Create object for citation (wrapped in JAXBElement)
 		org.docx4j.wml.SdtPr.Citation sdtprcitation = wmlObjectFactory.createSdtPrCitation();
-		JAXBElement<org.docx4j.wml.SdtPr.Citation> sdtprcitationWrapped = wmlObjectFactory.createSdtPrCitation(sdtprcitation);
+		JAXBElement<org.docx4j.wml.SdtPr.Citation> sdtprcitationWrapped = wmlObjectFactory
+				.createSdtPrCitation(sdtprcitation);
 		sdtpr.getRPrOrAliasOrLock().add(sdtprcitationWrapped);
 		// Create object for sdtContent
 		org.docx4j.wml.CTSdtContentRun sdtcontentrun = wmlObjectFactory.createCTSdtContentRun();
@@ -810,19 +1130,19 @@ public class FidusToDocx {
 		JAXBElement<org.docx4j.wml.Text> textWrapped = wmlObjectFactory.createRInstrText(text);
 		r2.getContent().add(textWrapped);
 		String citation = " CITATION ";
-		if(entries.size()>0){
+		if (entries.size() > 0) {
 			BibliographyEntry entry = entries.get(0);
-			citation +=entry.getTag();
-			if(pageNumbers!=null && pageNumbers.length>0)
-				citation +=" \\p "+pageNumbers[0];
+			citation += entry.getTag();
+			if (pageNumbers != null && pageNumbers.length > 0)
+				citation += " \\p " + pageNumbers[0];
 		}
-		for(int i=1;i<entries.size();i++){
+		for (int i = 1; i < entries.size(); i++) {
 			BibliographyEntry entry = entries.get(i);
-			citation +=" \\m "+entry.getTag();
-			if(pageNumbers!=null && pageNumbers.length>i)
-				citation +=" \\p "+pageNumbers[i];
+			citation += " \\m " + entry.getTag();
+			if (pageNumbers != null && pageNumbers.length > i)
+				citation += " \\p " + pageNumbers[i];
 		}
-		citation +=" \\l 1033 ";
+		citation += " \\l 1033 ";
 		text.setValue(citation);
 		text.setSpace("preserve");
 		// Create object for r
@@ -842,34 +1162,34 @@ public class FidusToDocx {
 		JAXBElement<org.docx4j.wml.Text> textWrapped2 = wmlObjectFactory.createRT(text2);
 		r4.getContent().add(textWrapped2);
 		String citationText = " (";
-		for(int i=0;i<entries.size();i++){
-			if(i>0)
+		for (int i = 0; i < entries.size(); i++) {
+			if (i > 0)
 				citationText += "; ";
 			BibliographyEntry entry = entries.get(i);
 			String title = entry.getAuthorsStr();
-			if(title==null){
-				title = entry.getSubtitle()!=null ? entry.getSubtitle() : entry.getTitle();
+			if (title == null) {
+				title = entry.getSubtitle() != null ? entry.getSubtitle() : entry.getTitle();
 			}
 			citationText += title;
-			if(entry.getYear()!=null)
-				citationText += ", "+entry.getYear();
-			if(pageNumbers !=null && pageNumbers.length>i)
-				citationText += ", p. "+pageNumbers[i];
+			if (entry.getYear() != null)
+				citationText += ", " + entry.getYear();
+			if (pageNumbers != null && pageNumbers.length > i)
+				citationText += ", p. " + pageNumbers[i];
 		}
 		citationText += ") ";
 		text2.setValue(citationText);
 		// Create object for rPr
 		// Set background color
-		org.docx4j.wml.RPr rpr2 = wmlObjectFactory.createRPr(); 
+		org.docx4j.wml.RPr rpr2 = wmlObjectFactory.createRPr();
 		r4.setRPr(rpr2);
 		// Create object for shd
-		org.docx4j.wml.CTShd shd = wmlObjectFactory.createCTShd(); 
-		rpr2.setShd(shd); 
-        shd.setFill( "D9D9D9"); 
-        shd.setColor( "auto"); 
-        shd.setVal(org.docx4j.wml.STShd.CLEAR);
-        shd.setThemeFillShade("D9"); 
-        shd.setThemeFill(org.docx4j.wml.STThemeColor.BACKGROUND_1);
+		org.docx4j.wml.CTShd shd = wmlObjectFactory.createCTShd();
+		rpr2.setShd(shd);
+		shd.setFill("D9D9D9");
+		shd.setColor("auto");
+		shd.setVal(org.docx4j.wml.STShd.CLEAR);
+		shd.setThemeFillShade("D9");
+		shd.setThemeFill(org.docx4j.wml.STThemeColor.BACKGROUND_1);
 		// Create object for noProof
 		org.docx4j.wml.BooleanDefaultTrue booleandefaulttrue = wmlObjectFactory.createBooleanDefaultTrue();
 		rpr2.setNoProof(booleandefaulttrue);
@@ -884,6 +1204,13 @@ public class FidusToDocx {
 		return paragraph;
 	}
 
+	/**
+	 * add all comments to the Docx file
+	 * 
+	 * @param commentObj
+	 *            : A reference to the comment object in Fidus format
+	 * @return A list of references to the created comments
+	 */
 	private ArrayList<org.docx4j.wml.Comments.Comment> createComment(fidusWriter.model.document.Comment commentObj) {
 		if (commentObj == null) {
 			return null;
@@ -892,11 +1219,10 @@ public class FidusToDocx {
 		// Add the comment itself
 		java.math.BigInteger commentId = new BigInteger(commentObj.getId().toString());
 		String author = commentObj.getUserName();
-		String user = ""+commentObj.getUser().intValue();
+		String user = "" + commentObj.getUser().intValue();
 		Date date = new Date(commentObj.getDate());
 		String message = commentObj.getComment();
-		org.docx4j.wml.Comments.Comment comment = this.createSingleComment(commentId, author, user, date,
-				message);
+		org.docx4j.wml.Comments.Comment comment = this.createSingleComment(commentId, author, user, date, message);
 		comments.add(comment);
 		// Add its answers also
 		if (commentObj.getAnswers() != null && commentObj.getAnswers().getAnswers() != null) {
@@ -905,7 +1231,7 @@ public class FidusToDocx {
 				CommentAnswer answerObj = answers.get(i);
 				commentId = new BigInteger(answerObj.getId().toString());
 				author = answerObj.getUserName();
-				user = ""+ answerObj.getUser().intValue();
+				user = "" + answerObj.getUser().intValue();
 				date = new Date(answerObj.getDate());
 				message = answerObj.getAnswer();
 				comment = this.createSingleComment(commentId, author, user, date, message);
@@ -916,6 +1242,21 @@ public class FidusToDocx {
 		return comments;
 	}
 
+	/**
+	 * Add a comment to the docx file
+	 * 
+	 * @param commentId
+	 *            : the reference id of the comment
+	 * @param author
+	 *            : author's name of the comment
+	 * @param user
+	 *            : the user id of the author
+	 * @param date
+	 *            : time of creation
+	 * @param message
+	 *            : the text of the comment
+	 * @return a reference to the created comment
+	 */
 	private org.docx4j.wml.Comments.Comment createSingleComment(java.math.BigInteger commentId, String author,
 			String user, Date date, String message) {
 		org.docx4j.wml.Comments.Comment comment = this.wmlObjectFactory.createCommentsComment();
@@ -972,6 +1313,14 @@ public class FidusToDocx {
 		return comment;
 	}
 
+	/**
+	 * Tags a point as the start point for the comment in the text
+	 * 
+	 * @param paragraph
+	 *            : the intended comment
+	 * @param comment
+	 *            : reference to the comment
+	 */
 	private void startComment(org.docx4j.wml.P paragraph, org.docx4j.wml.Comments.Comment comment) {
 		// Create object for commentRangeStart
 		CommentRangeStart commentrangestart = this.wmlObjectFactory.createCommentRangeStart();
@@ -980,6 +1329,14 @@ public class FidusToDocx {
 		paragraph.getContent().add(commentrangestart);
 	}
 
+	/**
+	 * Tags a point as the end point for the comment in the text
+	 * 
+	 * @param paragraph
+	 *            : the intended comment
+	 * @param comment
+	 *            : reference to the comment
+	 */
 	private void endComment(org.docx4j.wml.P paragraph, org.docx4j.wml.Comments.Comment comment) {
 		// Create object for commentRangeEnd
 		CommentRangeEnd commentrangeend = this.wmlObjectFactory.createCommentRangeEnd();
@@ -988,6 +1345,13 @@ public class FidusToDocx {
 		paragraph.getContent().add(this.createRunCommentReference(comment.getId()));
 	}
 
+	/**
+	 * Creates a run for connecting the comment to the text
+	 * 
+	 * @param commentId
+	 *            : Id of the comment
+	 * @return created run
+	 */
 	private org.docx4j.wml.R createRunCommentReference(java.math.BigInteger commentId) {
 		org.docx4j.wml.R run = this.wmlObjectFactory.createR();
 		org.docx4j.wml.RPr rpr = wmlObjectFactory.createRPr();
@@ -1002,23 +1366,43 @@ public class FidusToDocx {
 		return run;
 	}
 
+	/**
+	 * Receives a code block and tries to add its lines to the Docx file
+	 * 
+	 * @param child
+	 *            : the child that contains code
+	 * @param paragraph
+	 *            : the intended paragraph to add codes to that
+	 */
 	private void addCodeBlock(Child child, org.docx4j.wml.P paragraph) {
 		if (child.getType() == ChildrenTypes.textnode) {
 			TextNode textNode = (TextNode) child;
 			String code = textNode.getT();
 			String lines[] = code.split("\\r?\\n");
-			if(lines.length>0){
+			if (lines.length > 0) {
 				this.addALineOfCode(lines[0], paragraph, false);
-				for (int i=1; i<lines.length; i++) {
+				for (int i = 1; i < lines.length; i++) {
 					this.addALineOfCode(lines[i], paragraph, true);
 				}
 			}
 		}
 	}
 
+	/**
+	 * Adds a line of code to the passed paragraph
+	 * 
+	 * @param code
+	 *            : the code string
+	 * @param paragraph
+	 *            : the intended paragraph
+	 * @param makeNewParagraph
+	 *            : tells add the code to the passed paragraph or create a new
+	 *            paragraph
+	 */
 	private void addALineOfCode(String code, org.docx4j.wml.P paragraph, boolean makeNewParagraph) {
 		org.docx4j.wml.P parentP = paragraph;
-		if(makeNewParagraph || paragraph == null || paragraph.getPPr()==null || paragraph.getPPr().getNumPr()==null)
+		if (makeNewParagraph || paragraph == null || paragraph.getPPr() == null
+				|| paragraph.getPPr().getNumPr() == null)
 			paragraph = this.createAParagraph(null);
 		org.docx4j.wml.R run = this.createARun(paragraph, null);
 		// Create object for t (wrapped in JAXBElement)
@@ -1030,9 +1414,10 @@ public class FidusToDocx {
 		// Create object for pPr
 		org.docx4j.wml.PPr ppr = null;
 		ppr = this.getOrCreatePPr(paragraph);
-		if(makeNewParagraph == true && parentP != null && parentP.getPPr()!=null && parentP.getPPr().getNumPr()!=null)
-		{	// make new numid based on parentP
-			this.setListParagraph(paragraph, parentP);			
+		if (makeNewParagraph == true && parentP != null && parentP.getPPr() != null
+				&& parentP.getPPr().getNumPr() != null) { // make new numid
+															// based on parentP
+			this.setListParagraph(paragraph, parentP);
 		}
 		// Create object for pBdr
 		org.docx4j.wml.PPrBase.PBdr pprbasepbdr = wmlObjectFactory.createPPrBasePBdr();
@@ -1071,6 +1456,15 @@ public class FidusToDocx {
 		pprbasepstyle.setVal("FWCode");
 	}
 
+	/**
+	 * Creates a paragraph for an individual equation
+	 * 
+	 * @param paragraph
+	 *            : the intended paragraph
+	 * @param latexMath
+	 *            : the string that contains the LaTeX math
+	 * @return created paragraph
+	 */
 	private org.docx4j.wml.P addEquationDiv(org.docx4j.wml.P paragraph, String latexMath) {
 		paragraph = this.createAParagraph(paragraph);
 		// Create object for pPr
@@ -1086,7 +1480,7 @@ public class FidusToDocx {
 		// Create object for oMath
 		org.docx4j.math.CTOMath omath = null;
 		try {
-			String omathXML = this.equationConvertor.latex2omml(latexMath, false);
+			String omathXML = this.equationConverter.latex2omml(latexMath, false);
 			omath = (org.docx4j.math.CTOMath) ((javax.xml.bind.JAXBElement<?>) XmlUtils.unmarshalString(omathXML))
 					.getValue();
 			omathpara.getOMath().add(omath);
@@ -1100,12 +1494,21 @@ public class FidusToDocx {
 		return paragraph;
 	}
 
+	/**
+	 * Creates a run or pragraph for an inline equation
+	 * 
+	 * @param paragraph
+	 *            : the intended paragraph
+	 * @param latexMath
+	 *            : the string that contains the LaTeX math
+	 * @return created paragraph or current ones
+	 */
 	private org.docx4j.wml.P addEquationInline(org.docx4j.wml.P paragraph, String latexMath) {
 		paragraph = this.createAParagraph(paragraph);
 		// Create object for oMath
 		org.docx4j.math.CTOMath omath = null;
 		try {
-			String omathXML = this.equationConvertor.latex2omml(latexMath, true);
+			String omathXML = this.equationConverter.latex2omml(latexMath, true);
 			omath = (org.docx4j.math.CTOMath) ((javax.xml.bind.JAXBElement<?>) XmlUtils.unmarshalString(omathXML))
 					.getValue();
 			JAXBElement<org.docx4j.math.CTOMath> omathWrapped = mathObjectFactory.createOMath(omath);
@@ -1120,11 +1523,23 @@ public class FidusToDocx {
 		return paragraph;
 	}
 
+	/**
+	 * Creates an empty paragraph
+	 * 
+	 * @return created paragraph
+	 */
 	private org.docx4j.wml.P createAnEmptyParagraph() {
 		org.docx4j.wml.P p = this.createAParagraph(null);
 		return p;
 	}
 
+	/**
+	 * Capitalized the first leter of the string
+	 * 
+	 * @param original
+	 *            : the intended string
+	 * @return final string
+	 */
 	public String capitalizeFirstLetter(String original) {
 		if (original == null || original.length() == 0) {
 			return original;
@@ -1134,6 +1549,17 @@ public class FidusToDocx {
 			return original.substring(0, 1).toUpperCase() + original.substring(1);
 	}
 
+	/**
+	 * Creates a paragraph for caption
+	 * 
+	 * @param paragraph
+	 *            : the intended paragraph or null
+	 * @param category
+	 *            : the type of the caption : Table, Figure, Equation
+	 * @param counter
+	 *            : the number that must be shown in caption
+	 * @return
+	 */
 	public org.docx4j.wml.P setCaptionParagraph(org.docx4j.wml.P paragraph, FigureCategory category, Integer counter) {
 		String cat = this.capitalizeFirstLetter(category.name());
 		paragraph = this.createAParagraph(paragraph);
@@ -1210,6 +1636,15 @@ public class FidusToDocx {
 		return paragraph;
 	}
 
+	/**
+	 * Creates an unordered list paragraph
+	 * 
+	 * @param paragraph
+	 *            : the intended paragraph
+	 * @param listId
+	 *            : the id of the list
+	 * @return
+	 */
 	private org.docx4j.wml.P setListParagraph(org.docx4j.wml.P paragraph, BigInteger listId) {
 		paragraph = this.createAParagraph(paragraph);
 		// Create object for pPr
@@ -1231,6 +1666,16 @@ public class FidusToDocx {
 		pprbasepstyle.setVal("ListParagraph");
 		return paragraph;
 	}
+
+	/**
+	 * Creates an ordered list
+	 * 
+	 * @param paragraph
+	 *            : the intended paragraph or null
+	 * @param parentParagraph
+	 *            : the parent paragraph that inclused the ordered list
+	 * @return
+	 */
 	private org.docx4j.wml.P setListParagraph(org.docx4j.wml.P paragraph, org.docx4j.wml.P parentParagraph) {
 		paragraph = this.createAParagraph(paragraph);
 		// Create object for pPr
@@ -1241,25 +1686,21 @@ public class FidusToDocx {
 		// Create object for numId
 		org.docx4j.wml.PPrBase.NumPr.NumId pprbasenumprnumid = this.wmlObjectFactory.createPPrBaseNumPrNumId();
 		pprbasenumpr.setNumId(pprbasenumprnumid);
-		if(parentParagraph != null 
-			&& parentParagraph.getPPr() != null
-			&& parentParagraph.getPPr().getNumPr() != null
-			&& parentParagraph.getPPr().getNumPr().getNumId()!=null
-			&& parentParagraph.getPPr().getNumPr().getNumId().getVal() != null){
+		if (parentParagraph != null && parentParagraph.getPPr() != null && parentParagraph.getPPr().getNumPr() != null
+				&& parentParagraph.getPPr().getNumPr().getNumId() != null
+				&& parentParagraph.getPPr().getNumPr().getNumId().getVal() != null) {
 			pprbasenumprnumid.setVal(parentParagraph.getPPr().getNumPr().getNumId().getVal());
-		} else{
+		} else {
 			pprbasenumprnumid.setVal(BigInteger.valueOf(1));
 		}
 		// Create object for ilvl
 		org.docx4j.wml.PPrBase.NumPr.Ilvl pprbasenumprilvl = this.wmlObjectFactory.createPPrBaseNumPrIlvl();
 		pprbasenumpr.setIlvl(pprbasenumprilvl);
-		if(parentParagraph != null 
-			&& parentParagraph.getPPr() != null
-			&& parentParagraph.getPPr().getNumPr() != null
-			&& parentParagraph.getPPr().getNumPr().getIlvl()!=null
-			&& parentParagraph.getPPr().getNumPr().getIlvl().getVal() != null){
+		if (parentParagraph != null && parentParagraph.getPPr() != null && parentParagraph.getPPr().getNumPr() != null
+				&& parentParagraph.getPPr().getNumPr().getIlvl() != null
+				&& parentParagraph.getPPr().getNumPr().getIlvl().getVal() != null) {
 			pprbasenumprilvl.setVal(parentParagraph.getPPr().getNumPr().getIlvl().getVal());
-		} else{
+		} else {
 			pprbasenumprilvl.setVal(BigInteger.valueOf(0));
 		}
 		// Create object for pStyle
@@ -1268,6 +1709,14 @@ public class FidusToDocx {
 		pprbasepstyle.setVal("ListParagraph");
 		return paragraph;
 	}
+
+	/**
+	 * Marks or create a paragraph as quotion
+	 * 
+	 * @param paragraph
+	 *            : the intended paragraph
+	 * @return
+	 */
 	private org.docx4j.wml.P setQuoteParagraph(org.docx4j.wml.P paragraph) {
 		paragraph = this.createAParagraph(paragraph);
 		org.docx4j.wml.PPr ppr = this.getOrCreatePPr(paragraph);
@@ -1278,6 +1727,15 @@ public class FidusToDocx {
 		return paragraph;
 	}
 
+	/**
+	 * Adds a break line to the text
+	 * 
+	 * @param paragraph
+	 *            : the intended paragraph or null
+	 * @param run
+	 *            : the intended run or null
+	 * @return the paragraph that contains break line
+	 */
 	private org.docx4j.wml.P addBreakLineRun(org.docx4j.wml.P paragraph, org.docx4j.wml.R run) {
 		paragraph = this.createAParagraph(paragraph);
 		run = this.createARun(paragraph, run);
@@ -1287,12 +1745,13 @@ public class FidusToDocx {
 	}
 
 	/**
+	 * Creates numbering level
 	 * 
 	 * @param level
-	 *            has to be between 0 to 8
+	 *            : has to be between 0 to 8
 	 * @param indent
-	 *            has to be a number like 0, 360, 720, 1080, ....
-	 * @return
+	 *            : has to be a number like 0, 360, 720, 1080, ....
+	 * @return the created level
 	 */
 	private org.docx4j.wml.Lvl createNumberingLevel(int level, long indent) {
 		if (level < 0)
@@ -1337,6 +1796,15 @@ public class FidusToDocx {
 		return lvl;
 	}
 
+	/**
+	 * Creates bullet level
+	 * 
+	 * @param level
+	 *            : has to be between 0 to 8
+	 * @param indent
+	 *            : has to be a number like 0, 360, 720, 1080, ....
+	 * @return the created level
+	 */
 	private org.docx4j.wml.Lvl createBulletLevel(int level, long indent) {
 		if (level < 0)
 			level = 0;
@@ -1384,6 +1852,17 @@ public class FidusToDocx {
 		return lvl;
 	}
 
+	/**
+	 * Create an abstract prototype for list in docx file
+	 * 
+	 * @param abstractNumId
+	 *            : Id of the abstract list
+	 * @param indent
+	 *            : the default indent
+	 * @param type
+	 *            : type of the list ol or ul
+	 * @return the created abstract numbering list
+	 */
 	private org.docx4j.wml.Numbering.AbstractNum createAbstractList(BigInteger abstractNumId, long indent,
 			NumberingType type) {
 		org.docx4j.wml.Numbering.AbstractNum abstractNum = this.wmlObjectFactory.createNumberingAbstractNum();
@@ -1401,8 +1880,17 @@ public class FidusToDocx {
 		return abstractNum;
 	}
 
+	/**
+	 * Adds new ordered/unordered list to the docx file
+	 * 
+	 * @param indent
+	 *            : the intended indent
+	 * @param type
+	 *            : type of the list: or/ul
+	 * @return the id of the list
+	 */
 	private BigInteger addNewNumberingList(long indent, NumberingType type) {
-		org.docx4j.wml.Numbering numbering = this.getNumbering();
+		org.docx4j.wml.Numbering numbering = this.numbering;
 		BigInteger numId = BigInteger.valueOf(0);
 		BigInteger abstractNumId = BigInteger.valueOf(-1);
 		int size = numbering.getNum().size();
@@ -1432,10 +1920,30 @@ public class FidusToDocx {
 		return numId;
 	}
 
+	/**
+	 * Saves the docx file
+	 * 
+	 * @param wordMLPackage
+	 *            : object model of the file
+	 * @param path
+	 *            : path for saving the file
+	 * @return true if successed
+	 */
 	private boolean saveDocx(org.docx4j.openpackaging.packages.WordprocessingMLPackage wordMLPackage, String path) {
 		return this.saveDocx(wordMLPackage, path, false);
 	}
 
+	/**
+	 * Saves the docx file and print xml files
+	 * 
+	 * @param wordMLPackage
+	 *            : object model of the file
+	 * @param path
+	 *            : path for saving the file
+	 * @param printXML
+	 *            : print xml files if true
+	 * @return true if successed
+	 */
 	private boolean saveDocx(org.docx4j.openpackaging.packages.WordprocessingMLPackage wordMLPackage, String path,
 			boolean printXML) {
 		if (wordMLPackage == null)
@@ -1453,6 +1961,17 @@ public class FidusToDocx {
 		return false;
 	}
 
+	/**
+	 * Adds a std block for meta data to the docx file
+	 * 
+	 * @param metaData
+	 *            : the meta data
+	 * @param coreProps
+	 *            : a reference to the core pros of the docx file
+	 * @param coverPagePros
+	 *            : a reference to the cover page pros of the docx file
+	 * @return created std block
+	 */
 	public org.docx4j.wml.SdtBlock addSdtBlock(MetaData metaData, org.docx4j.docProps.core.CoreProperties coreProps,
 			org.docx4j.docProps.coverPageProps.CoverPageProperties coverPagePros) {
 
@@ -1486,21 +2005,21 @@ public class FidusToDocx {
 		String abstraction = this.getStringOut(metaData.getAbstract(), "");
 		String keywords = this.getStringOut(metaData.getKeywords(), null);
 
-		if (title != null && title.length()>0) {
+		if (title != null && title.length() > 0) {
 			coreProps.getTitle().getValue().getContent().clear();
 			coreProps.getTitle().getValue().getContent().add(title);
 			sdtblockTemp = this.addTitleToSdtBlock(title);
 			sdtcontentblock.getContent().add(sdtblockTemp);
 		}
 		//
-		if (subTitle != null && subTitle.length()>0) {
+		if (subTitle != null && subTitle.length() > 0) {
 			coreProps.getSubject().getContent().clear();
 			coreProps.getSubject().getContent().add(subTitle);
 			sdtblockTemp = this.addSubTitleToSdtBlock(subTitle);
 			sdtcontentblock.getContent().add(sdtblockTemp);
 		}
 		//
-		if (authors != null && authors.length()>0) {
+		if (authors != null && authors.length() > 0) {
 			authors = authors.replace(',', ';');
 			coreProps.getCreator().getContent().clear();
 			coreProps.getCreator().getContent().add(authors);
@@ -1508,7 +2027,7 @@ public class FidusToDocx {
 			sdtcontentblock.getContent().add(sdtblockTemp);
 		}
 		//
-		if (abstraction != null && abstraction.length()>0) {
+		if (abstraction != null && abstraction.length() > 0) {
 			if (coverPagePros != null) {
 				coverPagePros.setAbstract(abstraction);
 			}
@@ -1516,28 +2035,36 @@ public class FidusToDocx {
 			sdtcontentblock.getContent().add(sdtblockTemp);
 		}
 		//
-		if (keywords != null && keywords.length()>0) {
+		if (keywords != null && keywords.length() > 0) {
 			keywords = keywords.replace(',', ';');
 			coreProps.setKeywords(keywords);
 			sdtblockTemp = this.addKeywordsToSdtBlock(keywords);
 			sdtcontentblock.getContent().add(sdtblockTemp);
 		}
 		//
-		//
 		return sdtblock;
 	}
 
+	/**
+	 * Extract the simple text out of the JSON object
+	 * 
+	 * @param nodeJson
+	 *            : the source object
+	 * @param str
+	 *            : extracted string for recursion. Empty string at first level.
+	 * @return extracted text
+	 */
 	private String getStringOut(NodeJson nodeJson, String str) {
 		if (nodeJson != null && nodeJson.getC() != null && nodeJson.getC().size() > 0) {
-			for(int i=0;i<nodeJson.getC().size();i++){
+			for (int i = 0; i < nodeJson.getC().size(); i++) {
 				if (nodeJson.getC().get(i).getType() == ChildrenTypes.textnode) {
 					TextNode tn = (TextNode) nodeJson.getC().get(i);
-					if (str != null){
+					if (str != null) {
 						String space = "";
-						if(!str.endsWith(" ") && !tn.getT().startsWith(" "))
+						if (!str.endsWith(" ") && !tn.getT().startsWith(" "))
 							space = " ";
-						str += space+tn.getT();
-					}else
+						str += space + tn.getT();
+					} else
 						str = tn.getT();
 				} else {
 					if (str == null)
@@ -1545,11 +2072,17 @@ public class FidusToDocx {
 					str = this.getStringOut((NodeJson) nodeJson.getC().get(i), str);
 				}
 			}
-			
+
 		}
 		return str;
 	}
 
+	/**
+	 * Adds title metada to file
+	 * 
+	 * @param title
+	 * @return
+	 */
 	private org.docx4j.wml.SdtBlock addTitleToSdtBlock(String title) {
 		// Create object for sdt
 		org.docx4j.wml.SdtBlock sdtblock = this.wmlObjectFactory.createSdtBlock();
@@ -1629,6 +2162,12 @@ public class FidusToDocx {
 		return sdtblock;
 	}
 
+	/**
+	 * Add subtitle metadata to docx file
+	 * 
+	 * @param subTitle
+	 * @return
+	 */
 	private org.docx4j.wml.SdtBlock addSubTitleToSdtBlock(String subTitle) {
 		// Create object for sdt
 		org.docx4j.wml.SdtBlock sdtblock3 = this.wmlObjectFactory.createSdtBlock();
@@ -1687,6 +2226,12 @@ public class FidusToDocx {
 		return sdtblock3;
 	}
 
+	/**
+	 * Adds authors to the file
+	 * 
+	 * @param authors
+	 * @return
+	 */
 	private org.docx4j.wml.SdtBlock addAuthorsToSdtBlock(String authors) {
 		// Create object for sdt
 		org.docx4j.wml.SdtBlock sdtblock4 = this.wmlObjectFactory.createSdtBlock();
@@ -1745,6 +2290,12 @@ public class FidusToDocx {
 		return sdtblock4;
 	}
 
+	/**
+	 * Adds abstract to the docx file
+	 * 
+	 * @param abstraction
+	 * @return
+	 */
 	private org.docx4j.wml.SdtBlock addAbstractToSdtBlock(String abstraction) {
 		org.docx4j.wml.SdtBlock sdtblock = wmlObjectFactory.createSdtBlock();
 		// Create object for sdtContent
@@ -1801,6 +2352,12 @@ public class FidusToDocx {
 		return sdtblock;
 	}
 
+	/**
+	 * Adds keywords to the Docx file
+	 * 
+	 * @param keywords
+	 * @return
+	 */
 	private org.docx4j.wml.SdtBlock addKeywordsToSdtBlock(String keywords) {
 		// Create object for sdt
 		org.docx4j.wml.SdtBlock sdtblock6 = this.wmlObjectFactory.createSdtBlock();
@@ -1863,6 +2420,12 @@ public class FidusToDocx {
 		return sdtblock6;
 	}
 
+	/**
+	 * Creates bibliography part of the docx file
+	 * 
+	 * @param bibliographyResources
+	 *            : resources of the bibliography
+	 */
 	public void createBibliography(List<org.docx4j.bibliography.CTSourceType> bibliographyResources) {
 		for (int i = 0; i < this.bibliography.getBibliographyEntries().size(); i++) {
 			BibliographyEntry entry = this.bibliography.getBibliographyEntries().get(i);
@@ -1870,6 +2433,13 @@ public class FidusToDocx {
 			bibliographyResources.add(source);
 		}
 	}
+
+	/**
+	 * Adds a person to a bibliography resource
+	 * 
+	 * @param cTNameListType
+	 * @param str
+	 */
 	private void addPersonToNameList(org.docx4j.bibliography.CTNameListType cTNameListType, String str) {
 		if (str == null)
 			return;
@@ -1890,17 +2460,24 @@ public class FidusToDocx {
 			}
 		}
 	}
+
+	/**
+	 * Adds a person to a bibliography resource
+	 * 
+	 * @param cTNameListType
+	 * @param names
+	 */
 	private void addPersonToNameList(org.docx4j.bibliography.CTNameListType cTNameListType, ArrayList<String> names) {
-		if (names == null || names.size()==0)
+		if (names == null || names.size() == 0)
 			return;
-		
+
 		org.docx4j.bibliography.CTPersonType person = this.biblioObjectFactory.createCTPersonType();
 		cTNameListType.getPerson().add(person);
 		if (names.size() >= 3) {
 			person.getFirst().add(names.get(0));
 			person.getMiddle().add(names.get(1));
 			person.getLast().add(names.get(2));
-			for(int i=3;i<names.size();i++)
+			for (int i = 3; i < names.size(); i++)
 				person.getLast().add(names.get(i));
 		} else if (names.size() == 2) {
 			person.getFirst().add(names.get(0));
@@ -1909,6 +2486,16 @@ public class FidusToDocx {
 			person.getLast().add(names.get(0));
 		}
 	}
+
+	/**
+	 * Receives bibliography of Fidus and covert it to resources in OOXML format
+	 * 
+	 * @param entry
+	 *            : 1 bibliography entry of Fidus
+	 * @param order
+	 *            : position of the resource in docx file
+	 * @return
+	 */
 	public org.docx4j.bibliography.CTSourceType convertBibliographyEntryToSource(BibliographyEntry entry,
 			Integer order) {
 		org.docx4j.bibliography.CTSourceType source = this.biblioObjectFactory.createCTSourceType();
@@ -1931,10 +2518,11 @@ public class FidusToDocx {
 		//
 		if (entry.getAuthor() != null) {
 			ArrayList<ArrayList<String>> list = entry.getAuthors();
-			org.docx4j.bibliography.CTNameOrCorporateType cTNameOrCorporateType = this.biblioObjectFactory.createCTNameOrCorporateType();
+			org.docx4j.bibliography.CTNameOrCorporateType cTNameOrCorporateType = this.biblioObjectFactory
+					.createCTNameOrCorporateType();
 			org.docx4j.bibliography.CTNameListType cTNameListType = this.biblioObjectFactory.createCTNameListType();
 			cTNameOrCorporateType.setNameList(cTNameListType);
-			for(int i=0;i<list.size();i++)
+			for (int i = 0; i < list.size(); i++)
 				this.addPersonToNameList(cTNameListType, list.get(i));
 			JAXBElement<org.docx4j.bibliography.CTNameOrCorporateType> cTAuthorTypeAuthor = this.biblioObjectFactory
 					.createCTAuthorTypeAuthor(cTNameOrCorporateType);
@@ -2023,7 +2611,8 @@ public class FidusToDocx {
 		}
 		//
 		if (entry.getOrganization() != null) {
-			JAXBElement<String> edition = this.biblioObjectFactory.createCTSourceTypeDepartment(entry.getOrganization());
+			JAXBElement<String> edition = this.biblioObjectFactory
+					.createCTSourceTypeDepartment(entry.getOrganization());
 			sourceParams.add(edition);
 		}
 		//
@@ -2039,7 +2628,8 @@ public class FidusToDocx {
 			JAXBElement<String> distributer = this.biblioObjectFactory.createCTSourceTypeDistributor(entry.getHolder());
 			sourceParams.add(distributer);
 			//
-			JAXBElement<String> productionCompany = this.biblioObjectFactory.createCTSourceTypeProductionCompany(entry.getHolder());
+			JAXBElement<String> productionCompany = this.biblioObjectFactory
+					.createCTSourceTypeProductionCompany(entry.getHolder());
 			sourceParams.add(productionCompany);
 		}
 		//
@@ -2125,10 +2715,12 @@ public class FidusToDocx {
 			JAXBElement<String> caseNumber = this.biblioObjectFactory.createCTSourceTypeCaseNumber(entry.getNumber());
 			sourceParams.add(caseNumber);
 			//
-			JAXBElement<String> patentNumber = this.biblioObjectFactory.createCTSourceTypePatentNumber(entry.getNumber());
+			JAXBElement<String> patentNumber = this.biblioObjectFactory
+					.createCTSourceTypePatentNumber(entry.getNumber());
 			sourceParams.add(patentNumber);
 			//
-			JAXBElement<String> recordingNumber = this.biblioObjectFactory.createCTSourceTypeRecordingNumber(entry.getNumber());
+			JAXBElement<String> recordingNumber = this.biblioObjectFactory
+					.createCTSourceTypeRecordingNumber(entry.getNumber());
 			sourceParams.add(recordingNumber);
 		}
 		//
@@ -2148,22 +2740,26 @@ public class FidusToDocx {
 		}
 		//
 		if (entry.getChapter() != null) {
-			JAXBElement<String> chapterNumber = this.biblioObjectFactory.createCTSourceTypeChapterNumber(entry.getChapter());
+			JAXBElement<String> chapterNumber = this.biblioObjectFactory
+					.createCTSourceTypeChapterNumber(entry.getChapter());
 			sourceParams.add(chapterNumber);
 		}
 		//
 		if (entry.getMaintitle() != null) {
-			JAXBElement<String> albumTitle = this.biblioObjectFactory.createCTSourceTypeAlbumTitle(entry.getMaintitle());
+			JAXBElement<String> albumTitle = this.biblioObjectFactory
+					.createCTSourceTypeAlbumTitle(entry.getMaintitle());
 			sourceParams.add(albumTitle);
 		}
 		//
 		if (entry.getMainsubtitle() != null) {
-			JAXBElement<String> shortTitle = this.biblioObjectFactory.createCTSourceTypeShortTitle(entry.getMainsubtitle());
+			JAXBElement<String> shortTitle = this.biblioObjectFactory
+					.createCTSourceTypeShortTitle(entry.getMainsubtitle());
 			sourceParams.add(shortTitle);
 		}
 		//
 		if (entry.getMaintitleaddon() != null) {
-			JAXBElement<String> internetSiteTitle = this.biblioObjectFactory.createCTSourceTypeInternetSiteTitle(entry.getMaintitleaddon());
+			JAXBElement<String> internetSiteTitle = this.biblioObjectFactory
+					.createCTSourceTypeInternetSiteTitle(entry.getMaintitleaddon());
 			sourceParams.add(internetSiteTitle);
 		}
 		//
@@ -2178,5 +2774,4 @@ public class FidusToDocx {
 		}
 		return source;
 	}
-
 }

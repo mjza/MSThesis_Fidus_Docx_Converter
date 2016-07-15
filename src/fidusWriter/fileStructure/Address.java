@@ -3,7 +3,10 @@ package fidusWriter.fileStructure;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
+/**
+ * @author Mahdi, Jaberzadeh Ansari
+ * @role   This class contains functions for working with file system addresses inside of the text files.   
+ */
 public class Address {
 	private String path = null;
 	private AddressType type;
@@ -11,6 +14,9 @@ public class Address {
 	private String directory = null;
 	private String fileName = null;
 	private String fileFullName = null;
+	/**
+	 * The getters and setters area
+	 */
 	public String getPath() {
 		return path;
 	}
@@ -47,6 +53,11 @@ public class Address {
 	public void setFileFullName(String fileFullName) {
 		this.fileFullName = fileFullName;
 	}
+	// End of getters and setters area
+	/**
+	 * A constructor that received a string which contains a path
+	 * @param path
+	 */
 	public Address(String path) {
 		super();
 		this.setPath(path);
@@ -75,6 +86,11 @@ public class Address {
 			return;
 		}
 	}
+	/**
+	 * Checks does the passed path is the address of an actual file or not
+	 * @param path
+	 * @return
+	 */
 	protected boolean checkFileExitance(String path){
 		File f = new File(path);
 		if(f.exists() && !f.isDirectory()) { 
@@ -82,6 +98,11 @@ public class Address {
 		}
 		return false;
 	}
+	/**
+	 * Checks does the passed path is the address of an actual directory or not
+	 * @param path
+	 * @return
+	 */
 	protected boolean checkDirectoryExitance(String path){
 		File f = new File(path);
 		if(f.exists() && f.isDirectory()) { 
@@ -89,6 +110,9 @@ public class Address {
 		}
 		return false;
 	}
+	/**
+	 * Prints the data of the object for tesing
+	 */
 	public void printPathInfo(){
 		System.out.println("The path : "+this.getPath());
 		if(this.getType() == AddressType.invalid){

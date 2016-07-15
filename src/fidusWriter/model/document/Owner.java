@@ -4,13 +4,16 @@ import java.util.ArrayList;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
+/**
+ * @author Mahdi, Jaberzadeh Ansari
+ * @role   This class contains functions and properties for model the Owner of the contents of the document.json    
+ */
 public class Owner {
 	private ArrayList<TeamMember> teamMembers = null; //new ArrayList<TeamMember>();
 	private Integer id = null;
     private String avatar = null;
     private String name = null;
-    //
+    // The getters and setters area
     public Integer getId() {
 		return id;
 	}
@@ -35,6 +38,11 @@ public class Owner {
 	public void setTeamMembers(ArrayList<TeamMember> teamMembers) {
 		this.teamMembers = teamMembers;
 	}
+ 	// end of the getters and setters area 
+    /**
+     * Creates the object based on the passed JSON object from the Fidus file
+     * @param owner
+     */
 	public Owner(JSONObject owner) {
 		if(owner != null)
 		{
@@ -57,12 +65,18 @@ public class Owner {
 			}
 		}
 	}
+	/**
+	 * Creates an empty object for initiate from the docx file.
+	 */
 	public Owner(){
 		this.setTeamMembers(new ArrayList<TeamMember>());
 		this.setId(1);
 		this.setAvatar("/static/img/default_avatar.png");
 		this.setName("MJZ_Convertor");
 	}
+	/**
+	 * This function converts the object to the JSON string for storing in document.json file
+	 */
 	public String toString(){
 		String str="{";
 		boolean flag = false;

@@ -1,6 +1,13 @@
 package fidusWriter.model.bibliography;
-
+/**
+ * @author Mahdi, Jaberzadeh Ansari
+ * @role   This class contains some constants for mapping bibliography data between docx and fidus standards.   
+ */
 public class BibliographyEntryType {
+	/**
+	 * different types of resources in Fidus
+	 * Please note position of the items is important
+	 */
 	private static String[] fidusTypes = {
 			null,										//0 org.docx4j.bibliography.STSourceType.Misc
 			"Article",									//1 org.docx4j.bibliography.STSourceType.ArticleInAPeriodical
@@ -37,6 +44,10 @@ public class BibliographyEntryType {
 			"Blog post",								//org.docx4j.bibliography.STSourceType.InternetSite
 			"Forum post"								//org.docx4j.bibliography.STSourceType.InternetSite
 	}; 
+	/**
+	 * Equivalent types in MS Word sources for fidus types
+	 * Please note position of the items is important
+	 */
 	private static org.docx4j.bibliography.STSourceType[] equivalentDocxTypes = {
 			org.docx4j.bibliography.STSourceType.MISC      // Default value
 			,org.docx4j.bibliography.STSourceType.ARTICLE_IN_A_PERIODICAL
@@ -73,6 +84,10 @@ public class BibliographyEntryType {
 			,org.docx4j.bibliography.STSourceType.INTERNET_SITE
 			,org.docx4j.bibliography.STSourceType.INTERNET_SITE
 	};
+	/**
+	 * Different possible types in MS Word
+	 * Please note position of the items is important
+	 */
 	private static org.docx4j.bibliography.STSourceType[] docxTypes = {
 			null,
 			org.docx4j.bibliography.STSourceType.ART
@@ -93,6 +108,10 @@ public class BibliographyEntryType {
 			,org.docx4j.bibliography.STSourceType.REPORT
 			,org.docx4j.bibliography.STSourceType.SOUND_RECORDING
 	};
+	/**
+	 * Equivalent type in Fidus for Docx types
+	 * Please note position of the items is important
+	 */
 	private static String[] equivalentFidusTypes = {
 			null,
 			"Miscellany",
@@ -113,17 +132,32 @@ public class BibliographyEntryType {
 			"Report",
 			"Miscellany"
 	};
+	/**
+	 * Receives an index and returns the equivalent type in Docx
+	 * @param index
+	 * @return
+	 */
 	public static org.docx4j.bibliography.STSourceType getDocxType(Integer index){
 		if(index!=null && index.intValue()<equivalentDocxTypes.length && index.intValue()>0)
 			return equivalentDocxTypes[index.intValue()];
 		return equivalentDocxTypes[0];
 	}
+	/**
+	 * Returns the type for an index in Fidus files
+	 * @param index
+	 * @return
+	 */
 	public static String getType(Integer index){
 		String str=null;
 		if(index!=null && index.intValue()<fidusTypes.length && index.intValue()>0)
 			str = fidusTypes[index.intValue()];
 		return str;
 	}
+	/**
+	 * Receives a type in Fidus and returns its index
+	 * @param str
+	 * @return
+	 */
 	public static Integer getFidusIndex(String str){
 		for(int i=0;i<fidusTypes.length;i++){
 			if(str.equalsIgnoreCase(fidusTypes[i]))
@@ -131,13 +165,23 @@ public class BibliographyEntryType {
 		}
 		return null;
 	}
+	/**
+	 * Receives a type in Docx and returns its index
+	 * @param type
+	 * @return
+	 */
 	public static Integer getDocxIndex(org.docx4j.bibliography.STSourceType type){
 		for(int i=0;i<docxTypes.length;i++){
 			if(type == docxTypes[i])
 				return Integer.valueOf(i);
 		}
 		return null;
-	}
+	}	
+	/**
+	 * Receives a Docx type and returns the equivalent type in Fidus
+	 * @param type
+	 * @return
+	 */
 	public static String getFidusType(org.docx4j.bibliography.STSourceType type){
 		Integer index = getDocxIndex(type);
 		String str=null;
@@ -145,6 +189,11 @@ public class BibliographyEntryType {
 			str = equivalentFidusTypes[index.intValue()];
 		return str;
 	}
+	/**
+	 * Receives a Docx type and returns the index of the equivalent type in Fidus
+	 * @param type
+	 * @return
+	 */
 	public static Integer getFidusTypeNumber(org.docx4j.bibliography.STSourceType type){
 		String str=getFidusType(type);
 		return str!=null? getFidusIndex(str) : new Integer(0);

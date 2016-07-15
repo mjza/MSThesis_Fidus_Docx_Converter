@@ -6,7 +6,10 @@ import java.util.Calendar;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-
+/**
+ * @author Mahdi, Jaberzadeh Ansari
+ * @role   This class contains functions for modelling comment   
+ */
 public class Comment {
 	private Long id = null;            // A random ID for the comment that is unique within the document.
 	private Integer user = null;       // PK value of comment author
@@ -17,40 +20,7 @@ public class Comment {
 	private CommentAnswers answers = null;
 	private Boolean reviewIsMajor = null;
 	private Boolean hidden =  null;
-	//
-	public Comment(){
-		this.setUserAvatar("/static/img/default_avatar.png");
-		this.answers = new CommentAnswers();
-		this.setReviewIsMajor(false);
-		this.setHidden(false);
-	}
-	public Comment(JSONObject comment) {
-		if(comment.get("id")!=null){
-			this.setId(Long.parseLong(comment.get("id").toString()));
-		}
-		if(comment.get("user")!=null){
-			this.setUser(Integer.parseInt(comment.get("user").toString()));
-		}
-		if(comment.get("userName")!=null){
-			this.setUserName(comment.get("userName").toString());
-		}
-		if(comment.get("userAvatar")!=null){
-			this.setUserAvatar(comment.get("userAvatar").toString());
-		}
-		if(comment.get("date")!=null){
-			this.setDate(Long.parseLong(comment.get("date").toString()));
-		}
-		if(comment.get("comment")!=null){
-	    	this.setComment(comment.get("comment").toString());
-		}
-		if(comment.get("answers")!=null){
-			JSONArray answers = ( (JSONArray) comment.get("answers") );
-			this.setAnswers(new CommentAnswers(answers));
-		}
-		if(comment.get("review:isMajor")!=null){
-			this.setReviewIsMajor(Boolean.parseBoolean(comment.get("review:isMajor").toString()));
-		}
-	}
+    // The getters and setters area
 	public Long getId() {
 		return id;
 	}
@@ -117,6 +87,50 @@ public class Comment {
 	public void setHidden(boolean hidden) {
 		this.hidden = hidden;
 	}
+	// end of the getters and setters area 
+	/**
+	 * The constructor that makes an empty object for using in Docx 2 Fidus conversion
+	 */
+	public Comment(){
+		this.setUserAvatar("/static/img/default_avatar.png");
+		this.answers = new CommentAnswers();
+		this.setReviewIsMajor(false);
+		this.setHidden(false);
+	}
+	/**
+	 * The constructor for converting JSON object to the Comment object
+	 * @param comment
+	 */
+	public Comment(JSONObject comment) {
+		if(comment.get("id")!=null){
+			this.setId(Long.parseLong(comment.get("id").toString()));
+		}
+		if(comment.get("user")!=null){
+			this.setUser(Integer.parseInt(comment.get("user").toString()));
+		}
+		if(comment.get("userName")!=null){
+			this.setUserName(comment.get("userName").toString());
+		}
+		if(comment.get("userAvatar")!=null){
+			this.setUserAvatar(comment.get("userAvatar").toString());
+		}
+		if(comment.get("date")!=null){
+			this.setDate(Long.parseLong(comment.get("date").toString()));
+		}
+		if(comment.get("comment")!=null){
+	    	this.setComment(comment.get("comment").toString());
+		}
+		if(comment.get("answers")!=null){
+			JSONArray answers = ( (JSONArray) comment.get("answers") );
+			this.setAnswers(new CommentAnswers(answers));
+		}
+		if(comment.get("review:isMajor")!=null){
+			this.setReviewIsMajor(Boolean.parseBoolean(comment.get("review:isMajor").toString()));
+		}
+	}
+	/**
+	 * This function converts the object to the JSON string for storing in document.json file
+	 */
 	public String toString(){
 		String str = "{";
 		boolean flag = false;
@@ -170,6 +184,4 @@ public class Comment {
 		str+="}";
 		return str;
 	}
-	
-	
 }

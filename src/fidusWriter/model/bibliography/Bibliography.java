@@ -10,18 +10,25 @@ import java.util.Set;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-
+/**
+ * @author Mahdi, Jaberzadeh Ansari
+ * @role   This class contains    
+ */
 public class Bibliography {
 	private ArrayList<BibliographyEntry> bibliographyEntries = new ArrayList<BibliographyEntry>();
 	private BibliographyEntry recentEntry = null;
-	
+	// Getters and setters area
 	public ArrayList<BibliographyEntry> getBibliographyEntries() {
 		return bibliographyEntries;
 	}
 	public void setBibliographyEntries(ArrayList<BibliographyEntry> bibliographyEntry) {
 		this.bibliographyEntries = bibliographyEntry;
 	}
-	// personalized methods
+	// end of getters and setters 
+	/**
+	 * Get a path to the bibliography file and imports all entries inside of it.
+	 * @param path
+	 */
 	public void importFromFile(String path){ 
 		JSONParser parser = new JSONParser();
 		try{
@@ -43,7 +50,9 @@ public class Bibliography {
 			e.printStackTrace();
 		}
 	}
-	//
+	/**
+	 * Converts the object to string for storing in bibliography.json file.
+	 */
 	public String toString(){
 		String str = "{";
 		for(int i=0;i<this.bibliographyEntries.size();i++){
@@ -54,7 +63,11 @@ public class Bibliography {
 		str += "}";
 		return str;
 	}
-	//
+	/**
+	 * Receives an id of an Entry and returns it
+	 * @param id
+	 * @return
+	 */
 	public BibliographyEntry getBibliographyEntry(long id){
 		if(this.recentEntry!=null){
 			if(this.recentEntry.getId().longValue()==id)
@@ -70,7 +83,11 @@ public class Bibliography {
 			}
 		return this.recentEntry;
 	}
-	
+	/**
+	 * Receives a tag of an entry and returns it.
+	 * @param tag
+	 * @return
+	 */
 	public BibliographyEntry getBibliographyEntry(String tag){
 		if(this.recentEntry!=null){
 			if(this.recentEntry.getTag().compareTo(tag)==0)
@@ -86,7 +103,10 @@ public class Bibliography {
 			}
 		return this.recentEntry;
 	}
-	
+	/**
+	 * This function is used for storing Docx resources as enteries
+	 * @param entry
+	 */
 	public void addBibliographyEntry(BibliographyEntry entry){
 		this.bibliographyEntries.add(entry);
 	}

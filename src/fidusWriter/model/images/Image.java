@@ -2,200 +2,266 @@ package fidusWriter.model.images;
 
 import org.json.simple.JSONObject;
 
+/**
+ * @author Mahdi, Jaberzadeh Ansari
+ * @role This class contains functions to model a image entry in Fidus file
+ */
 public class Image {
+	/**
+	 * Properties of the image.
+	 */
 	private Long added = null;
-    private String title = null;
-    private String fileType = null;
-    private Long checksum = null;
-    private String image = null;
-    private Integer height = null;
-    private Integer width = null;
-    private Long pk = null;
-    private String thumbnail = null;
-	
-    public Long getAdded() {
+	private String title = null;
+	private String fileType = null;
+	private Long checksum = null;
+	private String image = null;
+	private Integer height = null;
+	private Integer width = null;
+	private Long pk = null;
+	private String thumbnail = null;
+
+	// Getters and setters area
+	public Long getAdded() {
 		return added;
 	}
+
 	public void setAdded(Long added) {
 		this.added = added;
 	}
+
 	public String getTitle() {
 		return title;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public String getFileType() {
 		return fileType;
 	}
+
 	public void setFileType(String fileType) {
 		this.fileType = fileType;
 	}
+
 	public Long getChecksum() {
 		return checksum;
 	}
+
 	public void setChecksum(Long checksum) {
 		this.checksum = checksum;
 	}
+
 	public String getImage() {
 		return image;
 	}
+
 	public void setImage(String image) {
 		this.image = image;
 	}
+
 	public Integer getHeight() {
 		return height;
 	}
+
 	public void setHeight(Integer height) {
 		this.height = height;
 	}
+
 	public Integer getWidth() {
 		return width;
 	}
+
 	public void setWidth(Integer width) {
 		this.width = width;
 	}
+
 	public Long getPk() {
 		return pk;
 	}
+
 	public void setPk(Long pk) {
 		this.pk = pk;
 	}
+
 	public String getThumbnail() {
 		return thumbnail;
 	}
+
 	public void setThumbnail(String thumbnail) {
 		this.thumbnail = thumbnail;
 	}
-	public Image(JSONObject img){
-    	super();
-    	if(img.get("added")!=null){
+
+	// end of getters and setters area
+	/**
+	 * This constructor receives a JSON object and transfer its data to the
+	 * image object
+	 * 
+	 * @param img
+	 */
+	public Image(JSONObject img) {
+		super();
+		if (img.get("added") != null) {
 			this.setAdded(Long.parseLong(img.get("added").toString()));
 		}
-    	if(img.get("title")!=null){
-    		this.setTitle(img.get("title").toString());
-    	}
-    	if(img.get("file_type")!=null){
-    		this.setFileType(img.get("file_type").toString());
-    	}
-    	if(img.get("checksum")!=null){
+		if (img.get("title") != null) {
+			this.setTitle(img.get("title").toString());
+		}
+		if (img.get("file_type") != null) {
+			this.setFileType(img.get("file_type").toString());
+		}
+		if (img.get("checksum") != null) {
 			this.setChecksum(Long.parseLong(img.get("checksum").toString()));
 		}
-    	if(img.get("image")!=null){
-    		this.setImage(img.get("image").toString());
-    	}
-    	if(img.get("height")!=null){
+		if (img.get("image") != null) {
+			this.setImage(img.get("image").toString());
+		}
+		if (img.get("height") != null) {
 			this.setHeight(Integer.parseInt(img.get("height").toString()));
 		}
-    	if(img.get("width")!=null){
+		if (img.get("width") != null) {
 			this.setWidth(Integer.parseInt(img.get("width").toString()));
 		}
-    	if(img.get("pk")!=null){
+		if (img.get("pk") != null) {
 			this.setPk(Long.parseLong(img.get("pk").toString()));
 		}
-    	if(img.get("thumbnail")!=null){
-    		this.setThumbnail(img.get("thumbnail").toString());
-    	}
-    }
-    public Image(String path, String title, int height, int width, int hash, long imagePk) {
-    	long time = System.currentTimeMillis();
+		if (img.get("thumbnail") != null) {
+			this.setThumbnail(img.get("thumbnail").toString());
+		}
+	}
+
+	/**
+	 * This constructor is used for creating image object from Docx file.
+	 * 
+	 * @param path
+	 *            : path to the actual file
+	 * @param title
+	 *            : title of the image
+	 * @param height
+	 *            : hight in pixels
+	 * @param width
+	 *            : width in pixels
+	 * @param hash
+	 *            : a hash value for the picture
+	 * @param imagePk
+	 *            : a unique id for the image
+	 */
+	public Image(String path, String title, int height, int width, int hash, long imagePk) {
+		long time = System.currentTimeMillis();
 		this.setAdded(time);
-		if(title == null || title.length()==0)
-			title = ""+time;
+		if (title == null || title.length() == 0)
+			title = "" + time;
 		this.setTitle(title);
 		this.setFileType(this.getMIMEType(path));
 		this.setImage(path);
 		this.setPk(imagePk);
 		this.setThumbnail("");
-		this.setChecksum(time+hash);
-        this.setHeight(height);
+		this.setChecksum(time + hash);
+		this.setHeight(height);
 		this.setWidth(width);
 	}
-    private String getMIMEType(String path){
-    	if(path.endsWith(".bmp") || path.endsWith(".bm"))
-    		return "image/bmp";
-    	else if(path.endsWith(".gif"))
-    		return "image/gif";
-    	else if(path.endsWith(".ico"))
-    		return "image/x-icon";
-    	else if(path.endsWith(".jfif"))
-    		return "image/jpeg";
-    	else if(path.endsWith(".jpe"))
-    		return "image/jpeg";
-    	else if(path.endsWith(".jpeg"))
-    		return "image/jpeg";
-    	else if(path.endsWith(".jpg"))
-    		return "image/jpeg";
-    	else if(path.endsWith(".png"))
-    		return "image/png";
-    	else if(path.endsWith(".tif"))
-    		return "image/tiff";
-    	else if(path.endsWith(".tiff"))
-    		return "image/tiff";
-    	return "";	
-    }
-	public String toString(){
-    	String str = "{";
-    	boolean flag = false;
-    	if(this.getAdded()!=null){
-    		flag = true;
-    		str+="\"added\":"+this.getAdded().longValue();
+
+	/**
+	 * Returns MIME type based on the type of the image
+	 * 
+	 * @param path
+	 * @return
+	 */
+	private String getMIMEType(String path) {
+		if (path.endsWith(".bmp") || path.endsWith(".bm"))
+			return "image/bmp";
+		else if (path.endsWith(".gif"))
+			return "image/gif";
+		else if (path.endsWith(".ico"))
+			return "image/x-icon";
+		else if (path.endsWith(".jfif"))
+			return "image/jpeg";
+		else if (path.endsWith(".jpe"))
+			return "image/jpeg";
+		else if (path.endsWith(".jpeg"))
+			return "image/jpeg";
+		else if (path.endsWith(".jpg"))
+			return "image/jpeg";
+		else if (path.endsWith(".png"))
+			return "image/png";
+		else if (path.endsWith(".tif"))
+			return "image/tiff";
+		else if (path.endsWith(".tiff"))
+			return "image/tiff";
+		return "";
+	}
+
+	/**
+	 * This function converts the object to the JSON object for storying in
+	 * images.json file.
+	 */
+	public String toString() {
+		String str = "{";
+		boolean flag = false;
+		if (this.getAdded() != null) {
+			flag = true;
+			str += "\"added\":" + this.getAdded().longValue();
 		}
-    	if(this.getTitle()!=null){
-    		if(flag==true)
+		if (this.getTitle() != null) {
+			if (flag == true)
 				str += ",";
 			flag = true;
-			str+="\"title\":\""+this.getTitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
-    	}
-    	if(this.getFileType()!=null){
-    		if(flag==true)
-				str += ",";
-			flag = true;
-			str+="\"file_type\":\""+this.getFileType().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
-    	}
-    	if(this.getChecksum()!=null){
-    		if(flag==true)
-				str += ",";
-			flag = true;
-			str+="\"checksum\":"+this.getChecksum().longValue();
+			str += "\"title\":\"" + this.getTitle().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")
+					+ "\"";
 		}
-    	if(this.getImage()!=null){
-    		if(flag==true)
+		if (this.getFileType() != null) {
+			if (flag == true)
 				str += ",";
 			flag = true;
-			str+="\"image\":\""+this.getImage().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
-    	}
-    	if(this.getHeight()!=null){
-    		if(flag==true)
-				str += ",";
-			flag = true;
-			str+="\"height\":"+this.getHeight().intValue();
+			str += "\"file_type\":\""
+					+ this.getFileType().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n") + "\"";
 		}
-    	if(this.getWidth()!=null){
-    		if(flag==true)
+		if (this.getChecksum() != null) {
+			if (flag == true)
 				str += ",";
 			flag = true;
-			str+="\"width\":"+this.getWidth().intValue();
+			str += "\"checksum\":" + this.getChecksum().longValue();
 		}
-    	if(true){
-    		if(flag==true)
+		if (this.getImage() != null) {
+			if (flag == true)
 				str += ",";
 			flag = true;
-			str+="\"cats\":["+"\"\""+"]";
+			str += "\"image\":\"" + this.getImage().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")
+					+ "\"";
 		}
-    	if(this.getPk()!=null){
-    		if(flag==true)
+		if (this.getHeight() != null) {
+			if (flag == true)
 				str += ",";
 			flag = true;
-			str+="\"pk\":"+this.getPk().longValue();
+			str += "\"height\":" + this.getHeight().intValue();
 		}
-    	if(this.getThumbnail()!=null){
-    		if(flag==true)
+		if (this.getWidth() != null) {
+			if (flag == true)
 				str += ",";
 			flag = true;
-			str+="\"thumbnail\":\""+this.getThumbnail().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n")+"\"";
-    	}
-    	str += "}";
-    	return str;
-    }
+			str += "\"width\":" + this.getWidth().intValue();
+		}
+		if (true) {
+			if (flag == true)
+				str += ",";
+			flag = true;
+			str += "\"cats\":[" + "\"\"" + "]";
+		}
+		if (this.getPk() != null) {
+			if (flag == true)
+				str += ",";
+			flag = true;
+			str += "\"pk\":" + this.getPk().longValue();
+		}
+		if (this.getThumbnail() != null) {
+			if (flag == true)
+				str += ",";
+			flag = true;
+			str += "\"thumbnail\":\""
+					+ this.getThumbnail().replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n") + "\"";
+		}
+		str += "}";
+		return str;
+	}
 }
